@@ -123,7 +123,7 @@ class TodoDisplay:
         self.dir_combbox["value"] = ["all"] + self.todo.get_dir_name_keys()
 
     def set_value_for_sort_combbox(self):
-        self.sort_combbox["value"] = ["importance", "limit"]
+        self.sort_combbox["value"] = ["重要度", "期限"]
 
     def mainloop(self):
         self.root.mainloop()
