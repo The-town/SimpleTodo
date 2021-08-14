@@ -14,21 +14,17 @@ class Frame(tk.Frame):
         self.grid(column=0, row=0)
         self["width"] = 100
         self["height"] = 100
-        self["padx"] = 20
-        self["pady"] = 20
-
+        self["padx"] = 10
+        self["pady"] = 10
+        self["bg"] = "white"
 
 class Label(tk.Label):
     def __init__(self, master=None):
         tk.Label.__init__(self, master)
 
-        self["font"] = ("メイリオ", 11)
-        self["width"] = 50
-        self["padx"] = 10
-        self["pady"] = 20
-        self["bg"] = "blue"
-        self["fg"] = "white"
-
+        self["font"] = ("メイリオ", 15)
+        self["width"] = 10
+        self["bg"] = "white"
 
 class Button(tk.Button):
     def __init__(self, master=None):
@@ -48,7 +44,7 @@ class Combobox(ttk.Combobox):
     def __init__(self, master=None):
         ttk.Combobox.__init__(self, master)
 
-        self["font"] = ("メイリオ", 20)
+        self["font"] = ("メイリオ", 15)
 
 
 class Text(scrolledtext.ScrolledText):

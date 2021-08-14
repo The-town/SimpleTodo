@@ -12,6 +12,7 @@ class TodoDisplay:
     def __init__(self):
         self.root = tk.Tk()
         self.root.title("todo")
+        self.root.configure(background='white')
 
         self.todo = Todo()
         self.todo_list_box_dict = {}
@@ -26,21 +27,29 @@ class TodoDisplay:
         self.listbox = Listbox(master=self.todo_list_frame, master_of_detail_text=self.todo_detail_frame)
 
         self.add_todo_button = Button(master=self.function_frame)
-        self.add_todo_button.grid(column=3, row=0)
+        self.add_todo_button.grid(column=5, row=0)
         self.add_todo_button["text"] = "TODO追加"
         self.add_todo_button["command"] = self.add_todo
 
         self.refresh_button = Button(master=self.function_frame)
-        self.refresh_button.grid(column=2, row=0)
+        self.refresh_button.grid(column=4, row=0)
         self.refresh_button["text"] = "更新"
         self.refresh_button["command"] = self.refresh
 
+        self.sort_label: Label = Label(master=self.function_frame)
+        self.sort_label["text"] = "フィルタ"
+        self.sort_label.grid(column=2, row=0)
+
         self.dir_combbox = Combobox(master=self.function_frame)
-        self.dir_combbox.grid(column=1, row=0, padx=(0,100))
+        self.dir_combbox.grid(column=3, row=0, padx=(0,100))
         self.set_value_for_dir_combbox()
 
+        self.sort_label: Label = Label(master=self.function_frame)
+        self.sort_label["text"] = "ソート方法"
+        self.sort_label.grid(column=0, row=0)
+
         self.sort_combbox = Combobox(master=self.function_frame)
-        self.sort_combbox.grid(column=0, row=0, padx=(0, 100))
+        self.sort_combbox.grid(column=1, row=0, padx=(0, 100))
         self.set_value_for_sort_combbox()
 
     def display_todo(self):
