@@ -60,9 +60,9 @@ class Todo:
     def sort_todo(self, paths, method):
         if method == "":
             return paths
-        elif method == "importance":
+        elif method == "重要度":
             return self.sort_importance(paths)
-        elif method == "limit":
+        elif method == "期限":
             return self.sort_todo_limit(paths)
 
     def sort_importance(self, paths):
