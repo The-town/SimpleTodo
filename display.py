@@ -27,12 +27,12 @@ class TodoDisplay:
         self.listbox = Listbox(master=self.todo_list_frame, master_of_detail_text=self.todo_detail_frame)
 
         self.add_todo_button = Button(master=self.function_frame)
-        self.add_todo_button.grid(column=5, row=0)
+        self.add_todo_button.grid(column=5, row=0, padx=5)
         self.add_todo_button["text"] = "TODO追加"
         self.add_todo_button["command"] = self.add_todo
 
         self.refresh_button = Button(master=self.function_frame)
-        self.refresh_button.grid(column=4, row=0)
+        self.refresh_button.grid(column=4, row=0, padx=5)
         self.refresh_button["text"] = "更新"
         self.refresh_button["command"] = self.refresh
 
