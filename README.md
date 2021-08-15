@@ -7,7 +7,7 @@
 
 
 
-![todo_public_ver_1](.\doc_img\todo_public_ver_1.jpg)
+![todo_public_ver_1](./doc_img/todo_public_ver_1.jpg)
 
 
 
