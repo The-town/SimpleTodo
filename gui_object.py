@@ -171,24 +171,24 @@ class DialogForAddTodo(simpledialog.Dialog):
         None
         """
 
-        discription_combobox_label: Label = Label(master)
-        discription_combobox_label["text"] = "カテゴリを選択"
-        discription_combobox_label["width"] = 25
-        discription_combobox_label["fg"] = "black"
-        discription_combobox_label["bg"] = "white"
-        discription_combobox_label.grid(column=0, row=0)
+        description_combobox_label: Label = Label(master)
+        description_combobox_label["text"] = "カテゴリを選択"
+        description_combobox_label["width"] = 25
+        description_combobox_label["fg"] = "black"
+        description_combobox_label["bg"] = "white"
+        description_combobox_label.grid(column=0, row=0)
 
         self.category: Combobox = Combobox(master)
         self.category["font"] = ("メイリオ", 11)
         self.category["value"] = list(self.items_for_combobox.keys())
         self.category.grid(column=1, row=0)
 
-        discription_entry_label: Label = Label(master)
-        discription_entry_label["text"] = "追加するTODO名を入力"
-        discription_entry_label["width"] = 25
-        discription_entry_label["fg"] = "black"
-        discription_entry_label["bg"] = "white"
-        discription_entry_label.grid(column=0, row=1)
+        description_entry_label: Label = Label(master)
+        description_entry_label["text"] = "追加するTODO名を入力"
+        description_entry_label["width"] = 25
+        description_entry_label["fg"] = "black"
+        description_entry_label["bg"] = "white"
+        description_entry_label.grid(column=0, row=1)
 
         self.todo_name: Entry = Entry(master)
         self.todo_name.grid(column=1, row=1)
