@@ -18,6 +18,7 @@ class Frame(tk.Frame):
         self["pady"] = 10
         self["bg"] = "white"
 
+
 class Label(tk.Label):
     def __init__(self, master=None):
         tk.Label.__init__(self, master)
@@ -25,6 +26,7 @@ class Label(tk.Label):
         self["font"] = ("メイリオ", 15)
         self["width"] = 10
         self["bg"] = "white"
+
 
 class Button(tk.Button):
     def __init__(self, master=None):
@@ -154,7 +156,51 @@ class Listbox(tk.Listbox):
 class DialogForAddTodo(simpledialog.Dialog):
     def __init__(self, master, items_for_combobox, title=None) -> None:
         self.items_for_combobox: dict = items_for_combobox
-        simpledialog.Dialog.__init__(self, parent=master)
+        parent = master
+
+        '''
+        ダイアログの初期化
+        背景色を変えるためにオーバーライドしている。
+        '''
+        Toplevel.__init__(self, parent, bg="white")  # 背景色の変更
+
+        self.withdraw() # remain invisible for now
+        # If the master is not viewable, don't
+        # make the child transient, or else it
+        # would be opened withdrawn
+        if parent.winfo_viewable():
+            self.transient(parent)
+
+        if title:
+            self.title(title)
+
+        self.parent = parent
+
+        self.result = None
+
+        body = Frame(self)
+        self.initial_focus = self.body(body)
+        body.pack(padx=5, pady=5)
+
+        self.buttonbox()
+
+        if not self.initial_focus:
+            self.initial_focus = self
+
+        self.protocol("WM_DELETE_WINDOW", self.cancel)
+
+        if self.parent is not None:
+            self.geometry("+%d+%d" % (parent.winfo_rootx()+50,
+                                      parent.winfo_rooty()+50))
+
+        self.deiconify() # become visible now
+
+        self.initial_focus.focus_set()
+
+        # wait for window to appear on screen before calling grab_set
+        self.wait_visibility()
+        self.grab_set()
+        self.wait_window(self)
 
     def body(self, master) -> None:
         """
@@ -210,3 +256,28 @@ class DialogForAddTodo(simpledialog.Dialog):
         with open(os.path.join(self.items_for_combobox[self.category.get()], todo_file_name), "w") as f:
             pass
 
+    def buttonbox(self):
+        """
+        OKとCancelボタンを作成するためのメソッド。
+        ボタンの色を変更するためにオーバーライドしている。
+
+        Parameters
+        ----------
+
+        Returns
+        -------
+        None
+        """
+
+        box = tk.Frame(self)
+        box["bg"] = "white"
+
+        w = tk.Button(box, text="OK", width=10, command=self.ok, default=ACTIVE)
+        w.pack(side=LEFT, padx=5, pady=5)
+        w = tk.Button(box, text="Cancel", width=10, command=self.cancel)
+        w.pack(side=LEFT, padx=5, pady=5)
+
+        self.bind("<Return>", self.ok)
+        self.bind("<Escape>", self.cancel)
+
+        box.pack()
