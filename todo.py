@@ -63,7 +63,7 @@ class Todo:
         if metadata_list:
             display_metadata_list = []
             for i, metadata in enumerate(metadata_list):
-                if metadata != "":
+                if metadata != "#":
                     display_metadata_list.append(":".join([self.rule_file["Meta_data"][str(i+1)], metadata]))
             return display_metadata_list
         else:
