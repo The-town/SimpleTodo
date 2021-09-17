@@ -2,6 +2,7 @@ from operate_file_1 import get_all_files
 import configparser
 import re
 import linecache
+import os
 import datetime
 import hashlib
 
@@ -40,15 +41,26 @@ class Todo:
         else:
             return self.rule_file["Importance_color"][result.group()[1]]
 
-    def search_meta_data(self, path):
-        linecache.clearcache()
-        first_line = linecache.getline(path, 1)
+    def search_meta_data(self, path) -> list:
+        """
+        ファイル名に記載されているメタデータを取り出す関数
 
-        if "" == first_line:
-            return [""]
+        Parameters
+        ----------
+        path: str
+            todoファイルのパス
 
-        if "#" == first_line[0]:
-            metadata_list = first_line[1:].split(" ")[:len(self.rule_file["Meta_data"].keys())]
+        Returns
+        -------
+        display_metadata_list: list
+            メタデータ
+        """
+        file_name: str = os.path.basename(path)
+
+        # "[A][#meta1][#meta2]test.txt" -> ["#meta1", "#meta2"]
+        metadata_list: list = [metadata for metadata in re.split(r"[\[\]]", file_name)[:-1] if "#" in metadata]
+
+        if metadata_list:
             display_metadata_list = []
             for i, metadata in enumerate(metadata_list):
                 if metadata != "":
