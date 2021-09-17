@@ -124,10 +124,14 @@ class Listbox(tk.Listbox):
 
     def read_detail_of_todo(self, index):
         path = self.todo_list[index]
-        with open(path, encoding="utf_8") as f:
-            return f.read()
+        try:
+            with open(path, encoding="utf_8") as f:
+                return f.read()
+        except UnicodeDecodeError:
+            return "このファイルはプレビューできません。"
 
-    def get_timestamp_of_path(self, path):
+    @staticmethod
+    def get_timestamp_of_path(path):
         stat_result = os.stat(path)
         create_time = datetime.datetime.fromtimestamp(stat_result.st_ctime).strftime("%Y/%m/%d %H:%M:%S")
         update_time = datetime.datetime.fromtimestamp(stat_result.st_mtime).strftime("%Y/%m/%d %H:%M:%S")
