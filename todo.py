@@ -108,10 +108,5 @@ class Todo:
         result = re_pattern.search(file_name)
         return result
 
-    def get_todo_status(self, path):
-        if path in self.todo_status.keys():
-            return self.todo_status[path]
-        return "stop"
-
     def get_dir_name_keys(self):
         return self.dir_name_keys
