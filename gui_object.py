@@ -6,6 +6,7 @@ import tkinter.scrolledtext as scrolledtext
 import os
 import datetime
 import subprocess
+import configparser
 
 
 class Frame(tk.Frame):
@@ -162,6 +163,9 @@ class DialogForAddTodo(simpledialog.Dialog):
         self.items_for_combobox: dict = items_for_combobox
         parent = master
 
+        self.rule_file = configparser.ConfigParser()
+        self.rule_file.read("./config.ini", "UTF-8")
+
         '''
         ダイアログの初期化
         背景色を変えるためにオーバーライドしている。
@@ -256,7 +260,9 @@ class DialogForAddTodo(simpledialog.Dialog):
         None
         """
         # todoという文字列が入っていないと、GUI上に表示されないため追加している。
-        todo_file_name: str = "[todo]" + self.todo_name.get() + ".txt"
+        todo_file_name: str = "".join([self.rule_file["string_when_add_todo"]["head"],
+                                       self.todo_name.get(),
+                                       self.rule_file["string_when_add_todo"]["tail"]])
         with open(os.path.join(self.items_for_combobox[self.category.get()], todo_file_name), "w") as f:
             pass
 
