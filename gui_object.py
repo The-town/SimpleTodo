@@ -259,7 +259,6 @@ class DialogForAddTodo(simpledialog.Dialog):
         -------
         None
         """
-        # todoという文字列が入っていないと、GUI上に表示されないため追加している。
         todo_file_name: str = "".join([self.rule_file["string_when_add_todo"]["head"],
                                        self.todo_name.get(),
                                        self.rule_file["string_when_add_todo"]["tail"]])
