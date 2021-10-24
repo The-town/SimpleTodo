@@ -38,6 +38,16 @@ class Button(tk.Button):
         self["font"] = ("メイリオ", 15)
 
 
+class CloseTodoButton(tk.Button):
+    def __init__(self, master=None):
+        tk.Button.__init__(self, master)
+
+        self["height"] = 1
+        self["width"] = 20
+        self["font"] = ("メイリオ", 12)
+        self["text"] = "完了"
+
+
 class RefreshButton(Button):
     def __init__(self, master=None,):
         Button.__init__(self, master)
@@ -103,6 +113,7 @@ class Listbox(tk.Listbox):
         self.text.destroy()
 
         self.text = TextForDisplayDetail(self.master_of_detail_text)
+
         self.text.tag_bind("system_message_file_path", "<Double-Button-1>", self.open_with_another_app)
         self.text.tag_bind("system_message_folder_path", "<Double-Button-1>", self.open_folder)
         create_time, update_time = self.get_timestamp_of_path(self.todo_list[self.index(ACTIVE)])
@@ -111,11 +122,19 @@ class Listbox(tk.Listbox):
         self.text.insert(END, "フォルダを開く", "system_message_folder_path")
         self.text.insert(END, "\n\n")
         self.text.insert(END, self.read_detail_of_todo(self.index(ACTIVE)))
+
         self.text.insert(END, "\n\n======メタデータ======\n\n")
         self.text.insert(END, "作成 {0} 更新 {1}".format(create_time, update_time))
         self.text.insert(END, "\n")
         self.text.insert(END, self.todo_list[self.index(ACTIVE)])
+
+        self.text.insert(END, "\n\n======TODO操作======\n\n")
+        close_todo_button = CloseTodoButton()
+        close_todo_button["command"] = self.close_todo
+        self.text.window_create(tk.END, window=close_todo_button)
+
         self.text.grid(column=0, row=1, columnspan=3)
+
 
     def set_todo_list(self, todo_list_dict):
         self.todo_list = todo_list_dict
@@ -149,6 +168,10 @@ class Listbox(tk.Listbox):
     def open_folder(self, event=None):
         path = "\\".join(self.get_todo_list()[self.index(ACTIVE)].split("\\")[:-1])
         subprocess.run("explorer {0}".format(path))
+
+    def close_todo(self, event=None):
+        path: str = self.get_path_of_active_todo()
+        os.rename(path, os.path.join(os.path.dirname(path), os.path.basename(path).replace("todo", "完了")))
 
     # 選択された行をactive状態にするメソッド
     # シングルクリックの場合にactive状態へ遷移させるために実装した
