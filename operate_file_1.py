@@ -16,7 +16,7 @@ def get_all_files(root, patterns = "*", single_level=False, yeild_folders=False)
         for name in files:
             for pattern in patterns:
                 #fnmatchはnameがpatternに一致する場合、Trueを返す。
-                if fnmatch.fnmatch(name, pattern):
+                if fnmatch.fnmatch(name, pattern) and not ("[完了]" in name):
                     yield os.path.join(path, name)
                     break
         if single_level:

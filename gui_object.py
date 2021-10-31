@@ -135,7 +135,6 @@ class Listbox(tk.Listbox):
 
         self.text.grid(column=0, row=1, columnspan=3)
 
-
     def set_todo_list(self, todo_list_dict):
         self.todo_list = todo_list_dict
 
