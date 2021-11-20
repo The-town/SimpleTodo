@@ -7,6 +7,7 @@ import os
 import datetime
 import subprocess
 import configparser
+from validate import validate_todo_name
 
 
 class Frame(tk.Frame):
@@ -304,14 +305,13 @@ class DialogForAddTodo(simpledialog.Dialog):
         -------
         None
         """
-        not_use_strings: list = ["/", ".", "\\"]
-
-        for not_use_string in not_use_strings:
-            if not_use_string in set(self.todo_name.get()):
-                self.todo_name_check_label.grid(column=1, row=2)
-                self.todo_name_check_label["text"] = f"{not_use_string}は名前に使えません。"
-                return False
-        return True
+        is_validate, error_msg = validate_todo_name(self.todo_name.get())
+        if is_validate:
+            return True
+        else:
+            self.todo_name_check_label.grid(column=1, row=2)
+            self.todo_name_check_label["text"] = error_msg
+            return False
 
     def buttonbox(self):
         """
