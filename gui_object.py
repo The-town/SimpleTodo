@@ -269,6 +269,11 @@ class DialogForAddTodo(simpledialog.Dialog):
         self.todo_name: Entry = Entry(master)
         self.todo_name.grid(column=1, row=1)
 
+        self.todo_name_check_label: Label = Label(master)
+        self.todo_name_check_label["width"] = 25
+        self.todo_name_check_label["font"] = ("メイリオ", 9)
+        self.todo_name_check_label["fg"] = "red"
+
     def apply(self):
         """
         このDialogオブジェクトが破棄される際に実行される処理を定義する。
@@ -286,6 +291,27 @@ class DialogForAddTodo(simpledialog.Dialog):
                                        self.rule_file["string_when_add_todo"]["tail"]])
         with open(os.path.join(self.items_for_combobox[self.category.get()], todo_file_name), "w") as f:
             pass
+
+    def validate(self) -> bool:
+        """
+        このDialogオブジェクトが破棄される際に行う検証を定義する。
+        todo名のバリデーションチェックを行う。
+
+        Parameters
+        ----------
+
+        Returns
+        -------
+        None
+        """
+        not_use_strings: list = ["/", ".", "\\"]
+
+        for not_use_string in not_use_strings:
+            if not_use_string in set(self.todo_name.get()):
+                self.todo_name_check_label.grid(column=1, row=2)
+                self.todo_name_check_label["text"] = f"{not_use_string}は名前に使えません。"
+                return False
+        return True
 
     def buttonbox(self):
         """
