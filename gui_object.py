@@ -7,7 +7,7 @@ import os
 import datetime
 import subprocess
 import configparser
-from validate import validate_todo_name
+from validate import validate_todo_name, validate_double_todo_name
 
 
 class Frame(tk.Frame):
@@ -270,10 +270,11 @@ class DialogForAddTodo(simpledialog.Dialog):
         self.todo_name: Entry = Entry(master)
         self.todo_name.grid(column=1, row=1)
 
-        self.todo_name_check_label: Label = Label(master)
-        self.todo_name_check_label["width"] = 25
-        self.todo_name_check_label["font"] = ("メイリオ", 9)
-        self.todo_name_check_label["fg"] = "red"
+        self.todo_name_check_message: Message = tk.Message(master)
+        self.todo_name_check_message["aspect"] = 300
+        self.todo_name_check_message["font"] = ("メイリオ", 9)
+        self.todo_name_check_message["fg"] = "red"
+        self.todo_name_check_message["bg"] = "white"
 
     def apply(self):
         """
@@ -305,12 +306,23 @@ class DialogForAddTodo(simpledialog.Dialog):
         -------
         None
         """
-        is_validate, error_msg = validate_todo_name(self.todo_name.get())
+        todo_path: str = self.items_for_combobox[self.category.get()]
+        todo_name: str = self.todo_name.get()
+        todo_file_name: str = "".join([self.rule_file["string_when_add_todo"]["head"],
+                                       todo_name,
+                                       self.rule_file["string_when_add_todo"]["tail"]])
+
+        is_validate_name, error_msg_name = validate_todo_name(todo_name)
+        is_validate_double_name, error_msg_double_name = validate_double_todo_name(todo_file_name, todo_path)
+
+        is_validate: bool = is_validate_name and is_validate_double_name
+        error_msg: str = "\n".join([error_msg_name, error_msg_double_name])
+
         if is_validate:
             return True
         else:
-            self.todo_name_check_label.grid(column=1, row=2)
-            self.todo_name_check_label["text"] = error_msg
+            self.todo_name_check_message.grid(column=1, row=2)
+            self.todo_name_check_message["text"] = error_msg
             return False
 
     def buttonbox(self):
