@@ -1,5 +1,6 @@
+import os
 import unittest
-from validate import validate_todo_name
+from validate import validate_todo_name, validate_double_todo_name
 
 
 class TestValidate(unittest.TestCase):
@@ -23,6 +24,18 @@ class TestValidate(unittest.TestCase):
 
         self.assertFalse(is_validate)
         self.assertEqual(error_msg, ".は名前に使えません。")
+
+    def test_validate_double_todo_name_True(self):
+        is_validate, error_msg = validate_double_todo_name("test_tod", os.getcwd())
+
+        self.assertTrue(is_validate)
+        self.assertEqual(error_msg, "")
+
+    def test_validate_double_todo_name_False(self):
+        is_validate, error_msg = validate_double_todo_name("test_todo", os.getcwd())
+
+        self.assertFalse(is_validate)
+        self.assertEqual(error_msg, "test_todoは既存のTODO名と重複しています。")
 
 
 if __name__ == '__main__':
