@@ -115,3 +115,9 @@ C=green
 
 > python display.py
 
+
+
+## •¶‘ˆê——
+
+[Simple Todo ‚ÅŽÀŒ»‚µ‚½‚¢‚±‚Æ](./doc/Simple Todo ‚ÅŽÀŒ»‚µ‚½‚¢‚±‚Æ.md)
+
