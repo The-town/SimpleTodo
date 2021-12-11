@@ -4,8 +4,6 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import tkinter.scrolledtext as scrolledtext
 import os
-import datetime
-import subprocess
 import configparser
 from validate import validate_todo_name, validate_double_todo_name
 
@@ -86,7 +84,7 @@ class TextForDisplayDetail(Text):
 
 
 class Listbox(tk.Listbox):
-    def __init__(self, master=None, master_of_detail_text=None):
+    def __init__(self, master=None):
         scrollbar = Scrollbar(master)
         scrollbar.pack(side=RIGHT, fill=Y)
         tk.Listbox.__init__(self, master, yscrollcommand=scrollbar.set, selectmode=EXTENDED)
@@ -96,34 +94,10 @@ class Listbox(tk.Listbox):
         self["height"] = 20
         self["font"] = ("メイリオ", 12)
         self.master = master
-        self.master_of_detail_text = master_of_detail_text
-        self.text = TextForDisplayDetail(self.master_of_detail_text)
-        self.date_label = Label(self.master_of_detail_text)
 
         scrollbar["command"] = self.yview
 
         self.todo_list = {}
-
-    def set_todo_list(self, todo_list_dict):
-        self.todo_list = todo_list_dict
-
-    def get_todo_list(self):
-        return self.todo_list
-
-    def get_path_of_active_todo(self):
-        return self.todo_list[self.index(ACTIVE)]
-
-    def open_with_another_app(self, event=None):
-        path = self.get_todo_list()[self.index(ACTIVE)]
-        os.system("start " + path)
-
-    def open_folder(self, event=None):
-        path = "\\".join(self.get_todo_list()[self.index(ACTIVE)].split("\\")[:-1])
-        subprocess.run("explorer {0}".format(path))
-
-    def close_todo(self, event=None):
-        path: str = self.get_path_of_active_todo()
-        os.rename(path, os.path.join(os.path.dirname(path), os.path.basename(path).replace("todo", "完了")))
 
     # 選択された行をactive状態にするメソッド
     # シングルクリックの場合にactive状態へ遷移させるために実装した
@@ -147,7 +121,7 @@ class DialogForAddTodo(simpledialog.Dialog):
         '''
         Toplevel.__init__(self, parent, bg="white")  # 背景色の変更
 
-        self.withdraw() # remain invisible for now
+        self.withdraw()  # remain invisible for now
         # If the master is not viewable, don't
         # make the child transient, or else it
         # would be opened withdrawn
