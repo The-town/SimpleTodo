@@ -119,5 +119,5 @@ C=green
 
 ## ï∂èëàÍóó
 
-[Simple Todo Ç≈é¿åªÇµÇΩÇ¢Ç±Ç∆](./doc/Simple Todo Ç≈é¿åªÇµÇΩÇ¢Ç±Ç∆.md)
+[Simple Todo Ç≈é¿åªÇµÇΩÇ¢Ç±Ç∆](./doc/SimpleTodoÇ≈é¿åªÇµÇΩÇ¢Ç±Ç∆.md)
 
