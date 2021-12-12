@@ -49,6 +49,7 @@ class TodoDisplay:
         self.todo_display_list.display_todo_list(self.dir_combobox.get(), self.sort_combobox.get())
 
     def refresh(self, event=None):
+        self.todo_display_list: TodoListDisplay = TodoListDisplay(master=self.root, todo=self.todo)
         self.todo_display_list.display_todo_list(self.dir_combobox.get(), self.sort_combobox.get())
 
     def add_todo(self, event=None):
@@ -112,8 +113,8 @@ class TodoListDisplay:
             self.todo_listbox.activate_line_clicked(event=event)
 
         todo_path: str = self.todo_list_box_dict[self.todo_listbox.index(ACTIVE)]
-        todo_detail: TodoDetailDisplay = TodoDetailDisplay(todo_path, self.master)
-        todo_detail.display_todo_detail(self.todo)
+        todo_detail: TodoDetailDisplay = TodoDetailDisplay(todo_path, self.todo, self.master)
+        todo_detail.display_todo_detail()
 
     @staticmethod
     def get_paths_which_todo_file_have(todo: Todo, directory: str, sort_method: str):
@@ -124,23 +125,24 @@ class TodoListDisplay:
 
 
 class TodoDetailDisplay:
-    def __init__(self, todo_path: str, master=None) -> None:
+    def __init__(self, todo_path: str, todo: Todo, master=None) -> None:
         self.todo_detail_frame = Frame(master)
         self.todo_detail_frame.grid(column=1, row=1)
 
+        self.todo: Todo = todo
         self.todo_path: str = todo_path
 
-    def display_todo_detail(self, todo: Todo) -> None:
+    def display_todo_detail(self) -> None:
         text = TextForDisplayDetail(self.todo_detail_frame)
 
         text.tag_bind("system_message_file_path", "<Double-Button-1>", self.open_with_another_app)
         text.tag_bind("system_message_folder_path", "<Double-Button-1>", self.open_folder)
-        create_time, update_time = todo.get_todo_timestamp(self.todo_path)
+        create_time, update_time = self.todo.get_todo_timestamp(self.todo_path)
         text.insert(END, "ファイルを開く", "system_message_file_path")
         text.insert(END, "\t\t")
         text.insert(END, "フォルダを開く", "system_message_folder_path")
         text.insert(END, "\n\n")
-        text.insert(END, todo.get_todo_detail(self.todo_path))
+        text.insert(END, self.todo.get_todo_detail(self.todo_path))
 
         text.insert(END, "\n\n======メタデータ======\n\n")
         text.insert(END, "作成 {0} 更新 {1}".format(create_time, update_time))
@@ -160,10 +162,11 @@ class TodoDetailDisplay:
     def open_folder(self, event=None):
         subprocess.run("explorer {0}".format(self.todo_path))
 
-    def close_todo(self, todo, event=None) -> None:
-        todo.close_todo(self.todo_path)
+    def close_todo(self, event=None) -> None:
+        self.todo.close_todo(self.todo_path)
 
 
 if __name__ == "__main__":
     todo_display = TodoDisplay()
-    todo_display.mainloop()
+    todo_display.root.mainloop()
+

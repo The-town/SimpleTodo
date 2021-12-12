@@ -227,6 +227,6 @@ class Todo:
         None
         """
         os.rename(todo_path,
-                  os.todo_path.join(
-                      os.todo_path.dirname(todo_path), os.todo_path.basename(todo_path).replace("todo", "完了"))
+                  os.path.join(
+                      os.path.dirname(todo_path), os.path.basename(todo_path).replace("todo", "完了"))
                   )
