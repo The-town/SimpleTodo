@@ -160,7 +160,7 @@ class TodoDetailDisplay:
         os.system("start " + self.todo_path)
 
     def open_folder(self, event=None):
-        subprocess.run("explorer {0}".format(self.todo_path))
+        subprocess.run("explorer {0}".format(os.path.dirname(self.todo_path)))
 
     def close_todo(self, event=None) -> None:
         self.todo.close_todo(self.todo_path)
