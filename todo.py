@@ -32,6 +32,12 @@ class Todo:
         self.rule_file = configparser.ConfigParser()
         self.rule_file.read("./config.ini", "UTF-8")
 
+        self.set_name_from_path()
+        self.set_importance_from_filename()
+        self.set_metadata_from_filename()
+        self.set_todo_timestamp()
+        self.get_todo_detail()
+
     def set_name_from_path(self) -> None:
         """
         パスからファイル名を抽出して設定するメソッド
