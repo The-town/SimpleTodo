@@ -23,8 +23,8 @@ class Todo:
         self.name: str = ""
         self.detail: str = ""
         self.path: str = path
-        self.importance: str = "Z"
-        self.importance_color: str = "default"
+        self.importance: str = "default"
+        self.importance_color: str = "white"
         self.create_time: str = ""
         self.update_time: str = ""
         self.metadata: dict = {}
@@ -62,7 +62,10 @@ class Todo:
             )
         )
         re_pattern = re.compile(pattern)
-        self.importance = str(re_pattern.search(self.name))
+        if re_pattern.search(self.name):
+            self.importance = re_pattern.search(self.name).group()[1]
+        else:
+            self.importance = "default"
         self.importance_color = self.rule_file["Importance_color"][self.importance]
 
     def set_metadata_from_filename(self) -> None:
