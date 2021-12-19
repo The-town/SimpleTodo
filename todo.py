@@ -140,7 +140,7 @@ class ControlTodo:
         """
         todos: List[Todo] = []
         for dir_name in self.dir_names:
-            todos = [Todo(path) for path in get_all_files(dir_name, ";".join(self.patterns))]
+            todos.extend([Todo(path) for path in get_all_files(dir_name, ";".join(self.patterns))])
         return todos
 
     def limit_search_file(self, dir_name_key):
