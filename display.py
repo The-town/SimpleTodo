@@ -1,7 +1,8 @@
 from tkinter import *
 import tkinter as tk
+from typing import List
 
-from todo import ControlTodo
+from todo import ControlTodo, Todo
 from gui_object import Frame, Label, Listbox, TextForDisplayDetail, Button, Combobox, DialogForAddTodo, CloseTodoButton
 import os
 import subprocess
@@ -95,33 +96,28 @@ class TodoListDisplay:
     def display_todo_list(self, todo_directory: str, sort_method: str) -> None:
         todo_list_box_id = 0
         self.todo_list_box_dict = {}
-        paths = self.get_paths_which_todo_file_have(self.control_todo, todo_directory, sort_method)
+        todos: List[Todo] = self.get_paths_which_todo_file_have(self.control_todo, todo_directory, sort_method)
 
-        for path in paths:
-            todo_information = self.control_todo.get_info_which_todo_have(path)
-            contents_to_display = self.control_todo.get_contents_to_display_which_todo_have(todo_information)
-            self.todo_listbox.insert(todo_list_box_id, contents_to_display)
-
-            importance_color = self.control_todo.search_importance(todo_information["file_name"])
-            self.todo_listbox.itemconfig(todo_list_box_id, {'bg': importance_color})
-
-            self.todo_list_box_dict[todo_list_box_id] = path
+        for todo in todos:
+            self.todo_listbox.insert(todo_list_box_id, self.control_todo.get_content_todo_for_display_list(todo))
+            self.todo_listbox.itemconfig(todo_list_box_id, {'bg': todo.importance_color})
+            self.todo_list_box_dict[todo_list_box_id] = todo
             todo_list_box_id = todo_list_box_id + 1
 
     def display_todo_detail(self, event=None) -> None:
         if str(event.type) == "ButtonPress":
             self.todo_listbox.activate_line_clicked(event=event)
 
-        todo_path: str = self.todo_list_box_dict[self.todo_listbox.index(ACTIVE)]
-        todo_detail: TodoDetailDisplay = TodoDetailDisplay(todo_path, self.control_todo, self.master)
+        todo: Todo = self.todo_list_box_dict[self.todo_listbox.index(ACTIVE)]
+        todo_detail: TodoDetailDisplay = TodoDetailDisplay(todo, self.control_todo, self.master)
         todo_detail.display_todo_detail()
 
     @staticmethod
     def get_paths_which_todo_file_have(control_todo: ControlTodo, directory: str, sort_method: str):
-        paths = control_todo.get_paths_which_result_of_search(directory)
-        sorted_paths = control_todo.sort_todo(paths, method=sort_method)
+        todos: List[Todo] = control_todo.get_paths_which_result_of_search(directory)
+        sorted_todos: List[Todo] = control_todo.sort_todo(todos, method=sort_method)
 
-        return sorted_paths
+        return sorted_todos
 
 
 class TodoDetailDisplay:

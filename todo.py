@@ -24,6 +24,7 @@ class Todo:
         self.detail: str = ""
         self.path: str = path
         self.importance: str = "Z"
+        self.importance_color: str = "default"
         self.create_time: str = ""
         self.update_time: str = ""
         self.metadata: dict = {}
@@ -55,7 +56,8 @@ class Todo:
             )
         )
         re_pattern = re.compile(pattern)
-        self.importance = re_pattern.search(self.name)
+        self.importance = str(re_pattern.search(self.name))
+        self.importance_color = self.rule_file["Importance_color"][self.importance]
 
     def set_metadata_from_filename(self) -> None:
         """
@@ -206,3 +208,23 @@ class ControlTodo:
                   os.path.join(
                       os.path.dirname(todo_path), os.path.basename(todo_path).replace("todo", "完了"))
                   )
+
+    def get_content_todo_for_display_list(self, todo: Todo) -> str:
+        """
+        todoをリスト表示する際に使用する文字列を取得するメソッド
+
+        Parameters
+        -----------
+        todo: Todo
+            todoオブジェクト
+
+        Returns
+        -------
+        " ".join([todo.name, metadata]): str
+            表示する文字列
+        """
+        metadata: str = ""
+        for key in todo.metadata.keys():
+            metadata = ":".join([self.rule_file["Meta_data"][key], todo.metadata[key]])
+
+        return " ".join([todo.name, metadata])
