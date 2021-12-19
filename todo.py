@@ -8,6 +8,22 @@ import datetime
 from flatten import flatten
 
 
+class Todo:
+    """
+    Todoの各属性値を保持する
+
+    Attributes
+    -----------
+    name: str
+        todo名
+    path: str
+        todoファイルのパス
+    """
+    def __init__(self) -> None:
+        self.name: str = ""
+        self.path: str = ""
+
+
 class ControlTodo:
     def __init__(self):
 
