@@ -22,6 +22,36 @@ class Todo:
     def __init__(self, path: str) -> None:
         self.name: str = ""
         self.path: str = path
+        self.importance: str = "Z"
+
+        self.rule_file = configparser.ConfigParser()
+        self.rule_file.read("./config.ini", "UTF-8")
+
+    def set_name_from_path(self) -> None:
+        """
+        パスからファイル名を抽出して設定するメソッド
+
+        Returns
+        -------
+        None
+        """
+        self.name = os.path.basename(self.path)
+
+    def set_importance_from_filename(self) -> None:
+        """
+        ファイル名から重要度を設定するメソッド
+
+        Returns
+        -------
+        None
+        """
+        pattern = r"\[[{0}]\]".format(
+            "|".join(
+                [key.upper() for key in self.rule_file["Importance_color"].keys()]
+            )
+        )
+        re_pattern = re.compile(pattern)
+        self.importance = re_pattern.search(self.name)
 
 
 class ControlTodo:
@@ -73,13 +103,6 @@ class ControlTodo:
                              get_all_files(self.rule_file["Dir_names"][dir_name_key], ";".join(self.patterns))]
         return todos
 
-    def search_importance(self, file_name):
-        result = self.judge_importance(file_name)
-        if result is None:
-            return self.rule_file["Importance_color"]["default"]
-        else:
-            return self.rule_file["Importance_color"][result.group()[1]]
-
     def search_meta_data(self, path) -> list:
         """
         ファイル名に記載されているメタデータを取り出す関数
@@ -116,22 +139,10 @@ class ControlTodo:
         elif method == "期限":
             return self.sort_todo_limit(paths)
 
-    def sort_importance(self, paths):
-        path_dicts = []
-        for path in paths:
-            path_dict = {}
-            file_name = path.split("\\")[-1].split(".")[0]
-            result = self.judge_importance(file_name)
-            if result is None:
-                path_dict["importance"] = "z"
-            else:
-                path_dict["importance"] = result.group()[1]
-            path_dict["path"] = path
-            path_dicts.append(path_dict)
-
-        sorted_path_dicts = sorted(path_dicts, key=lambda x: x["importance"])
-        sorted_paths = [sorted_path_dict["path"] for sorted_path_dict in sorted_path_dicts]
-        return sorted_paths
+    @staticmethod
+    def sort_importance(self, todos: List[Todo]):
+        sorted_todos = sorted(todos, key=lambda todo: todo.importance)
+        return sorted_todos
 
     def sort_todo_limit(self, paths):
         path_dicts = []
@@ -148,16 +159,6 @@ class ControlTodo:
         sorted_path_dicts = sorted(path_dicts, key=lambda x: x["metadata_todo_limit"])
         sorted_paths = [sorted_path_dict["path"] for sorted_path_dict in sorted_path_dicts]
         return sorted_paths
-
-    def judge_importance(self, file_name):
-        pattern = r"\[[{0}]\]".format(
-            "|".join(
-                [key.upper() for key in self.rule_file["Importance_color"].keys()]
-            )
-        )
-        re_pattern = re.compile(pattern)
-        result = re_pattern.search(file_name)
-        return result
 
     def get_dir_name_keys(self):
         return self.dir_name_keys
