@@ -189,18 +189,19 @@ class ControlTodo:
         return self.dir_name_keys
 
     @staticmethod
-    def close_todo(todo_path: str) -> None:
+    def close_todo(todo: Todo) -> None:
         """
         TODOファイルをクローズするメソッド
         Parameters
         ----------
-        todo_path: str
-            TODOファイルのパス
+        todo: Todo
+            クローズするTodoオブジェクト
 
         Returns
         -------
         None
         """
+        todo_path: str = todo.path
         os.rename(todo_path,
                   os.path.join(
                       os.path.dirname(todo_path), os.path.basename(todo_path).replace("todo", "完了"))
