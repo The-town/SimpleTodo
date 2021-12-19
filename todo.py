@@ -23,6 +23,7 @@ class Todo:
         self.name: str = ""
         self.path: str = path
         self.importance: str = "Z"
+        self.metadata: dict = {}
 
         self.rule_file = configparser.ConfigParser()
         self.rule_file.read("./config.ini", "UTF-8")
@@ -52,6 +53,22 @@ class Todo:
         )
         re_pattern = re.compile(pattern)
         self.importance = re_pattern.search(self.name)
+
+    def set_metadata_from_filename(self) -> None:
+        """
+        ファイル名からメタデータを設定する関数
+
+        Returns
+        -------
+        None
+        """
+        # "[A][#meta1][#meta2]test.txt" -> ["#meta1", "#meta2"]
+        metadata_list: list = [metadata for metadata in re.split(r"[\[\]]", self.name)[:-1] if "#" in metadata]
+
+        if metadata_list:
+            for i, metadata in enumerate(metadata_list):
+                if metadata != "#":
+                    self.metadata[list(self.rule_file["Meta_data"].keys())[i]] = metadata
 
 
 class ControlTodo:
@@ -103,34 +120,6 @@ class ControlTodo:
                              get_all_files(self.rule_file["Dir_names"][dir_name_key], ";".join(self.patterns))]
         return todos
 
-    def search_meta_data(self, path) -> list:
-        """
-        ファイル名に記載されているメタデータを取り出す関数
-
-        Parameters
-        ----------
-        path: str
-            todoファイルのパス
-
-        Returns
-        -------
-        display_metadata_list: list
-            メタデータ
-        """
-        file_name: str = os.path.basename(path)
-
-        # "[A][#meta1][#meta2]test.txt" -> ["#meta1", "#meta2"]
-        metadata_list: list = [metadata for metadata in re.split(r"[\[\]]", file_name)[:-1] if "#" in metadata]
-
-        if metadata_list:
-            display_metadata_list = []
-            for i, metadata in enumerate(metadata_list):
-                if metadata != "#":
-                    display_metadata_list.append(":".join([self.rule_file["Meta_data"][str(i+1)], metadata]))
-            return display_metadata_list
-        else:
-            return [""]
-
     def sort_todo(self, paths, method):
         if method == "":
             return paths
@@ -144,48 +133,30 @@ class ControlTodo:
         sorted_todos = sorted(todos, key=lambda todo: todo.importance)
         return sorted_todos
 
-    def sort_todo_limit(self, paths):
-        path_dicts = []
-        for path in paths:
-            path_dict = {}
-            first_metadata = self.search_meta_data(path)[0]
-            if self.rule_file["Meta_data"]["1"] in first_metadata:
-                path_dict["metadata_todo_limit"] = first_metadata.split(":")[-1]
-            else:
-                path_dict["metadata_todo_limit"] = "9999/12/31"
-            path_dict["path"] = path
-            path_dicts.append(path_dict)
+    @staticmethod
+    def sort_todo_limit(todos: List[Todo]):
+        """
+        期限順にTODOを並べ変えるメソッド
 
-        sorted_path_dicts = sorted(path_dicts, key=lambda x: x["metadata_todo_limit"])
-        sorted_paths = [sorted_path_dict["path"] for sorted_path_dict in sorted_path_dicts]
-        return sorted_paths
+        Parameters
+        -----------
+        todos: List[Todo]
+            todoオブジェクトのリスト
+
+        Returns
+        --------
+        並べ替えた後のtodoオブジェクトのリスト
+        """
+        # limitに何も設定されていない場合は、sortが失敗するため、仮の日付を設定する
+        for todo in todos:
+            if "limit" in todo.metadata.keys():
+                todo.metadata["limit"] = "9999-12-31"
+
+        sorted_todos = sorted(todos, key=lambda x: x.metadata["limit"])
+        return sorted_todos
 
     def get_dir_name_keys(self):
         return self.dir_name_keys
-
-    def get_info_which_todo_have(self, todo_file_path) -> dict:
-        """
-        TODOファイルの情報を返すメソッド
-
-        Parameters
-        ----------
-        todo_file_path: str
-            todoファイルのパス
-
-        Returns
-        -------
-        todo_information: dict
-            todoファイルに関する情報
-        """
-        metadata_list: list = self.search_meta_data(todo_file_path)
-        todo_file_name: str = todo_file_path.split("\\")[-1].split(".")[0]
-
-        todo_information: dict = {
-            "metadata_list": metadata_list,
-            "file_name": todo_file_name
-        }
-
-        return todo_information
 
     @staticmethod
     def get_contents_to_display_which_todo_have(todo_information) -> str:
