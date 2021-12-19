@@ -121,29 +121,28 @@ class TodoListDisplay:
 
 
 class TodoDetailDisplay:
-    def __init__(self, todo_path: str, control_todo: ControlTodo, master=None) -> None:
+    def __init__(self, todo: Todo, control_todo: ControlTodo, master=None) -> None:
         self.todo_detail_frame = Frame(master)
         self.todo_detail_frame.grid(column=1, row=1)
 
         self.control_todo: ControlTodo = control_todo
-        self.todo_path: str = todo_path
+        self.todo: Todo = todo
 
     def display_todo_detail(self) -> None:
         text = TextForDisplayDetail(self.todo_detail_frame)
 
         text.tag_bind("system_message_file_path", "<Double-Button-1>", self.open_with_another_app)
         text.tag_bind("system_message_folder_path", "<Double-Button-1>", self.open_folder)
-        create_time, update_time = self.control_todo.get_todo_timestamp(self.todo_path)
         text.insert(END, "ファイルを開く", "system_message_file_path")
         text.insert(END, "\t\t")
         text.insert(END, "フォルダを開く", "system_message_folder_path")
         text.insert(END, "\n\n")
-        text.insert(END, self.control_todo.get_todo_detail(self.todo_path))
+        text.insert(END, self.todo.detail)
 
         text.insert(END, "\n\n======メタデータ======\n\n")
-        text.insert(END, "作成 {0} 更新 {1}".format(create_time, update_time))
+        text.insert(END, "作成 {0} 更新 {1}".format(self.todo.create_time, self.todo.update_time))
         text.insert(END, "\n")
-        text.insert(END, self.todo_path)
+        text.insert(END, self.todo.path)
 
         text.insert(END, "\n\n======TODO操作======\n\n")
         close_todo_button = CloseTodoButton()
@@ -153,13 +152,13 @@ class TodoDetailDisplay:
         text.grid(column=0, row=1, columnspan=3)
 
     def open_with_another_app(self, event=None):
-        os.system("start " + self.todo_path)
+        os.system("start " + self.todo.path)
 
     def open_folder(self, event=None):
-        subprocess.run("explorer {0}".format(os.path.dirname(self.todo_path)))
+        subprocess.run("explorer {0}".format(os.path.dirname(self.todo.path)))
 
     def close_todo(self, event=None) -> None:
-        self.control_todo.close_todo(self.todo_path)
+        self.control_todo.close_todo(self.todo)
 
 
 if __name__ == "__main__":
