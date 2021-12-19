@@ -23,6 +23,8 @@ class Todo:
         self.name: str = ""
         self.path: str = path
         self.importance: str = "Z"
+        self.create_time: str = ""
+        self.update_time: str = ""
         self.metadata: dict = {}
 
         self.rule_file = configparser.ConfigParser()
@@ -69,6 +71,19 @@ class Todo:
             for i, metadata in enumerate(metadata_list):
                 if metadata != "#":
                     self.metadata[list(self.rule_file["Meta_data"].keys())[i]] = metadata
+
+    def set_todo_timestamp(self) -> None:
+        """
+        TODOファイルが作成・更新されたタイムスタンプを設定するメソッド
+
+        Returns
+        -------
+        create_time, update_time: Tuple[str, str]
+            作成日時と更新日時
+        """
+        stat_result = os.stat(self.path)
+        self.create_time = datetime.datetime.fromtimestamp(stat_result.st_ctime).strftime("%Y/%m/%d %H:%M:%S")
+        self.update_time = datetime.datetime.fromtimestamp(stat_result.st_mtime).strftime("%Y/%m/%d %H:%M:%S")
 
 
 class ControlTodo:
