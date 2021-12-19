@@ -190,7 +190,7 @@ class ControlTodo:
         """
         # limitに何も設定されていない場合は、sortが失敗するため、仮の日付を設定する
         for todo in todos:
-            if "limit" in todo.metadata.keys():
+            if "limit" not in todo.metadata.keys():
                 todo.metadata["limit"] = "9999-12-31"
 
         sorted_todos = sorted(todos, key=lambda x: x.metadata["limit"])
