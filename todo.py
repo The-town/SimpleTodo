@@ -140,7 +140,7 @@ class ControlTodo:
             return self.sort_todo_limit(paths)
 
     @staticmethod
-    def sort_importance(self, todos: List[Todo]):
+    def sort_importance(todos: List[Todo]):
         sorted_todos = sorted(todos, key=lambda todo: todo.importance)
         return sorted_todos
 
