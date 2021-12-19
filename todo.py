@@ -21,6 +21,7 @@ class Todo:
     """
     def __init__(self, path: str) -> None:
         self.name: str = ""
+        self.detail: str = ""
         self.path: str = path
         self.importance: str = "Z"
         self.create_time: str = ""
@@ -84,6 +85,20 @@ class Todo:
         stat_result = os.stat(self.path)
         self.create_time = datetime.datetime.fromtimestamp(stat_result.st_ctime).strftime("%Y/%m/%d %H:%M:%S")
         self.update_time = datetime.datetime.fromtimestamp(stat_result.st_mtime).strftime("%Y/%m/%d %H:%M:%S")
+
+    def get_todo_detail(self) -> None:
+        """
+        TODOファイルの詳細情報を取得するメソッド
+
+        Returns
+        --------
+        None
+        """
+        try:
+            with open(self.path, encoding="utf_8") as f:
+                self.detail = f.read()
+        except UnicodeDecodeError:
+            self.detail = "このファイルはプレビューできません。"
 
 
 class ControlTodo:
@@ -172,27 +187,6 @@ class ControlTodo:
 
     def get_dir_name_keys(self):
         return self.dir_name_keys
-
-    @staticmethod
-    def get_todo_detail(path: str) -> str:
-        """
-        TODOファイルの詳細情報を取得するメソッド
-
-        Parameters
-        -----------
-        path: str
-            TODOファイルのパス
-
-        Returns
-        --------
-        f.read(): str
-            詳細情報
-        """
-        try:
-            with open(path, encoding="utf_8") as f:
-                return f.read()
-        except UnicodeDecodeError:
-            return "このファイルはプレビューできません。"
 
     @staticmethod
     def close_todo(todo_path: str) -> None:
