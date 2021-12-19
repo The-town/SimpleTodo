@@ -120,13 +120,13 @@ class ControlTodo:
                              get_all_files(self.rule_file["Dir_names"][dir_name_key], ";".join(self.patterns))]
         return todos
 
-    def sort_todo(self, paths, method):
+    def sort_todo(self, todos: List[Todo], method: str):
         if method == "":
-            return paths
+            return todos
         elif method == "重要度":
-            return self.sort_importance(paths)
+            return self.sort_importance(todos)
         elif method == "期限":
-            return self.sort_todo_limit(paths)
+            return self.sort_todo_limit(todos)
 
     @staticmethod
     def sort_importance(todos: List[Todo]):
