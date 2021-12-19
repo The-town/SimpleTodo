@@ -8,7 +8,7 @@ import datetime
 from flatten import flatten
 
 
-class Todo:
+class ControlTodo:
     def __init__(self):
 
         self.rule_file = configparser.ConfigParser()
