@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, List
 
 from operate_file_1 import get_all_files
 import configparser
@@ -19,9 +19,9 @@ class Todo:
     path: str
         todoファイルのパス
     """
-    def __init__(self) -> None:
+    def __init__(self, path: str) -> None:
         self.name: str = ""
-        self.path: str = ""
+        self.path: str = path
 
 
 class ControlTodo:
@@ -42,14 +42,36 @@ class ControlTodo:
             return self.limit_search_file(directory_name)
 
     def search_file(self):
-        paths = []
+        """
+        全てのTODOファイルを取得する関数
+
+        Returns
+        -------
+        todos: List[Todo]
+            Todoオブジェクトのリスト
+        """
+        todos: List[Todo] = []
         for dir_name in self.dir_names:
-            paths.extend(list(get_all_files(dir_name, ";".join(self.patterns))))
-        return paths
+            todos = [Todo(path) for path in get_all_files(dir_name, ";".join(self.patterns))]
+        return todos
 
     def limit_search_file(self, dir_name_key):
-        paths = list(get_all_files(self.rule_file["Dir_names"][dir_name_key], ";".join(self.patterns)))
-        return paths
+        """
+        指定されたディレクトリ内にあるTODOファイルを取得する関数
+
+        Parameters
+        ----------
+        dir_name_key: str
+            ディレクトリの名前と対になるキー名
+
+        Returns
+        --------
+        todos: List[Todo]
+            Todoオブジェクトのリスト
+        """
+        todos: List[Todo] = [Todo(path) for path in
+                             get_all_files(self.rule_file["Dir_names"][dir_name_key], ";".join(self.patterns))]
+        return todos
 
     def search_importance(self, file_name):
         result = self.judge_importance(file_name)
