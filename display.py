@@ -35,10 +35,10 @@ class TodoDisplay:
 
         self.sort_label: Label = Label(master=self.function_frame)
         self.sort_label["text"] = "フィルタ"
-        self.sort_label.grid(column=2, row=0)
+        self.sort_label.grid(column=0, row=1)
 
         self.dir_combobox = Combobox(master=self.function_frame)
-        self.dir_combobox.grid(column=3, row=0, padx=(0, 100))
+        self.dir_combobox.grid(column=1, row=1, padx=(0, 100))
         self.set_value_for_dir_combobox()
 
         self.sort_label: Label = Label(master=self.function_frame)
