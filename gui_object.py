@@ -6,6 +6,7 @@ import tkinter.scrolledtext as scrolledtext
 import os
 import configparser
 from validate import validate_todo_name, validate_double_todo_name
+from todo import Todo, ControlTodo
 
 
 class Frame(tk.Frame):
@@ -105,6 +106,137 @@ class Listbox(tk.Listbox):
         self.selection_clear(0, tk.END)
         self.selection_set(self.nearest(event.y))
         self.activate(self.nearest(event.y))
+
+
+class CustomizeSimpleDialog(simpledialog.Dialog):
+    """
+    ダイアログの背景色を白にするためにオーバーライド
+    デフォルトは白。
+    """
+    def __init__(self, master, title=None, bg_color="white") -> None:
+        parent = master
+
+        '''
+        ダイアログの初期化
+        背景色を変えるためにオーバーライドしている。
+        '''
+        Toplevel.__init__(self, parent, bg=bg_color)  # 背景色の変更
+
+        self.withdraw()  # remain invisible for now
+        # If the master is not viewable, don't
+        # make the child transient, or else it
+        # would be opened withdrawn
+        if parent.winfo_viewable():
+            self.transient(parent)
+
+        if title:
+            self.title(title)
+
+        self.parent = parent
+
+        self.result = None
+
+        body = Frame(self)
+        self.initial_focus = self.body(body)
+        body.pack(padx=5, pady=5)
+
+        self.buttonbox()
+
+        if not self.initial_focus:
+            self.initial_focus = self
+
+        self.protocol("WM_DELETE_WINDOW", self.cancel)
+
+        if self.parent is not None:
+            self.geometry("+%d+%d" % (parent.winfo_rootx() + 50,
+                                      parent.winfo_rooty() + 50))
+
+        self.deiconify()  # become visible now
+
+        self.initial_focus.focus_set()
+
+        # wait for window to appear on screen before calling grab_set
+        self.wait_visibility()
+        self.grab_set()
+        self.wait_window(self)
+
+    def buttonbox(self):
+        """
+        OKとCancelボタンを作成するためのメソッド。
+        ボタンの色を変更するためにオーバーライドしている。
+
+        Parameters
+        ----------
+
+        Returns
+        -------
+        None
+        """
+
+        box = tk.Frame(self)
+        box["bg"] = "white"
+
+        w = tk.Button(box, text="OK", width=10, command=self.ok, default=ACTIVE)
+        w.pack(side=LEFT, padx=5, pady=5)
+        w = tk.Button(box, text="Cancel", width=10, command=self.cancel)
+        w.pack(side=LEFT, padx=5, pady=5)
+
+        self.bind("<Return>", self.ok)
+        self.bind("<Escape>", self.cancel)
+
+        box.pack()
+
+
+class DialogConfirmForCloseTodo(CustomizeSimpleDialog):
+    """
+    TODOを完了状態にする
+    """
+    def __init__(self, master, control_todo: ControlTodo, todo: Todo):
+
+        self.control_todo: ControlTodo = control_todo
+        self.todo: Todo = todo
+
+        super().__init__(master)
+
+    def body(self, master):
+        """
+        Dialogオブジェクトへ配置するオブジェクトを定義する。
+        完了にするTODOオブジェクトの情報を確認する
+
+        Parameters
+        ----------
+        master:
+            Dialogオブジェクトの親オブジェクト
+
+        Returns
+        -------
+        None
+        """
+        close_message_label: Label = Label(master)
+        close_message_label["text"] = "以下のTODOを完了にします。"
+        close_message_label["width"] = 30
+        close_message_label.grid(column=0, row=0)
+
+        todo_info_text: Text = Text(master)
+        todo_info_text.insert(END, self.todo.name)
+        todo_info_text.insert(END, "\n\n")
+        todo_info_text.insert(END, self.todo.detail)
+        todo_info_text["height"] = 10
+        todo_info_text.grid(column=0, row=1)
+
+    def apply(self):
+        """
+        このDialogオブジェクトが破棄される際に実行される処理を定義する。
+        対象のTODOファイルを完了状態にする。
+
+        Parameters
+        ----------
+
+        Returns
+        -------
+        None
+        """
+        self.control_todo.close_todo(self.todo)
 
 
 class DialogForAddTodo(simpledialog.Dialog):

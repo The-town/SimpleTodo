@@ -3,7 +3,8 @@ import tkinter as tk
 from typing import List
 
 from todo import ControlTodo, Todo
-from gui_object import Frame, Label, Listbox, TextForDisplayDetail, Button, Combobox, DialogForAddTodo, CloseTodoButton
+from gui_object import Frame, Label, Listbox, TextForDisplayDetail, Button, Combobox, DialogForAddTodo, \
+    DialogConfirmForCloseTodo, CloseTodoButton
 import os
 import subprocess
 
@@ -84,7 +85,7 @@ class TodoDisplay:
         None
         """
         todo: Todo = self.todo_display_list.todo_list_box_dict[self.todo_display_list.todo_listbox.index(ACTIVE)]
-        self.control_todo.close_todo(todo)
+        DialogConfirmForCloseTodo(self.root, self.control_todo, todo)
         self.refresh()
 
     def set_value_for_dir_combobox(self):
