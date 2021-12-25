@@ -21,7 +21,7 @@ class TodoDisplay:
 
         self.add_todo_button = Button(master=self.function_frame)
         self.add_todo_button.grid(column=5, row=0, padx=5)
-        self.add_todo_button["text"] = "TODO追加"
+        self.add_todo_button["text"] = "追加"
         self.add_todo_button["command"] = self.add_todo
 
         self.close_todo_button = CloseTodoButton(self.function_frame)
