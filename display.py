@@ -15,7 +15,6 @@ class TodoDisplay:
         self.root.configure(background='white')
 
         self.control_todo = ControlTodo()
-        self.todo_list_box_dict = {}
 
         self.function_frame = Frame(self.root)
         self.function_frame.grid(column=0, columnspan=2, row=0)
@@ -24,6 +23,10 @@ class TodoDisplay:
         self.add_todo_button.grid(column=5, row=0, padx=5)
         self.add_todo_button["text"] = "TODO追加"
         self.add_todo_button["command"] = self.add_todo
+
+        self.close_todo_button = CloseTodoButton(self.function_frame)
+        self.close_todo_button.grid(column=6, row=0, padx=5)
+        self.close_todo_button["command"] = self.close_todo
 
         self.refresh_button = Button(master=self.function_frame)
         self.refresh_button.grid(column=4, row=0, padx=5)
@@ -67,6 +70,22 @@ class TodoDisplay:
         """
         dir_names_items: dict = self.control_todo.dir_names_items
         DialogForAddTodo(self.root, items_for_combobox=dir_names_items)
+
+    def close_todo(self, event=None) -> None:
+        """
+        todoファイルを完了にする。
+
+        Parameters
+        ----------
+        event
+
+        Returns
+        -------
+        None
+        """
+        todo: Todo = self.todo_display_list.todo_list_box_dict[self.todo_display_list.todo_listbox.index(ACTIVE)]
+        self.control_todo.close_todo(todo)
+        self.refresh()
 
     def set_value_for_dir_combobox(self):
         self.dir_combobox["value"] = ["all"] + self.control_todo.get_dir_name_keys()
@@ -144,11 +163,6 @@ class TodoDetailDisplay:
         text.insert(END, "\n")
         text.insert(END, self.todo.path)
 
-        text.insert(END, "\n\n======TODO操作======\n\n")
-        close_todo_button = CloseTodoButton()
-        close_todo_button["command"] = self.close_todo
-        text.window_create(tk.END, window=close_todo_button)
-
         text.grid(column=0, row=1, columnspan=3)
 
     def open_with_another_app(self, event=None):
@@ -156,9 +170,6 @@ class TodoDetailDisplay:
 
     def open_folder(self, event=None):
         subprocess.run("explorer {0}".format(os.path.dirname(self.todo.path)))
-
-    def close_todo(self, event=None) -> None:
-        self.control_todo.close_todo(self.todo)
 
 
 if __name__ == "__main__":

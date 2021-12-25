@@ -42,8 +42,8 @@ class CloseTodoButton(tk.Button):
         tk.Button.__init__(self, master)
 
         self["height"] = 1
-        self["width"] = 20
-        self["font"] = ("メイリオ", 12)
+        self["width"] = 10
+        self["font"] = ("メイリオ", 15)
         self["text"] = "完了"
 
 
