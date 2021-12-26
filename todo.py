@@ -188,12 +188,11 @@ class ControlTodo:
         --------
         並べ替えた後のtodoオブジェクトのリスト
         """
-        # limitに何も設定されていない場合は、sortが失敗するため、仮の日付を設定する
-        for todo in todos:
-            if "limit" not in todo.metadata.keys():
-                todo.metadata["limit"] = "9999-12-31"
+        limited_todos: List[Todo] = [todo for todo in todos if "limit" in todo.metadata.keys()]
+        no_limited_todos: List[Todo] = [todo for todo in todos if "limit" not in todo.metadata.keys()]
 
-        sorted_todos = sorted(todos, key=lambda x: x.metadata["limit"])
+        sorted_todos: List[Todo] = sorted(limited_todos, key=lambda x: x.metadata["limit"])
+        sorted_todos.extend(no_limited_todos)
         return sorted_todos
 
     def get_dir_name_keys(self):
