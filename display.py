@@ -71,6 +71,7 @@ class TodoDisplay:
         """
         dir_names_items: dict = self.control_todo.dir_names_items
         DialogForAddTodo(self.root, items_for_combobox=dir_names_items)
+        self.refresh()
 
     def close_todo(self, event=None) -> None:
         """
