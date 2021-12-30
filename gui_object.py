@@ -239,57 +239,14 @@ class DialogConfirmForCloseTodo(CustomizeSimpleDialog):
         self.control_todo.close_todo(self.todo)
 
 
-class DialogForAddTodo(simpledialog.Dialog):
-    def __init__(self, master, items_for_combobox, title=None) -> None:
+class DialogForAddTodo(CustomizeSimpleDialog):
+    def __init__(self, master, items_for_combobox) -> None:
         self.items_for_combobox: dict = items_for_combobox
-        parent = master
-
         self.rule_file = configparser.ConfigParser()
         self.rule_file.read("./config.ini", "UTF-8")
 
-        '''
-        ダイアログの初期化
-        背景色を変えるためにオーバーライドしている。
-        '''
-        Toplevel.__init__(self, parent, bg="white")  # 背景色の変更
+        super().__init__(master=master)
 
-        self.withdraw()  # remain invisible for now
-        # If the master is not viewable, don't
-        # make the child transient, or else it
-        # would be opened withdrawn
-        if parent.winfo_viewable():
-            self.transient(parent)
-
-        if title:
-            self.title(title)
-
-        self.parent = parent
-
-        self.result = None
-
-        body = Frame(self)
-        self.initial_focus = self.body(body)
-        body.pack(padx=5, pady=5)
-
-        self.buttonbox()
-
-        if not self.initial_focus:
-            self.initial_focus = self
-
-        self.protocol("WM_DELETE_WINDOW", self.cancel)
-
-        if self.parent is not None:
-            self.geometry("+%d+%d" % (parent.winfo_rootx()+50,
-                                      parent.winfo_rooty()+50))
-
-        self.deiconify() # become visible now
-
-        self.initial_focus.focus_set()
-
-        # wait for window to appear on screen before calling grab_set
-        self.wait_visibility()
-        self.grab_set()
-        self.wait_window(self)
 
     def buttonbox(self):
         """
