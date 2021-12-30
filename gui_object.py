@@ -291,6 +291,16 @@ class DialogForAddTodo(simpledialog.Dialog):
         self.grab_set()
         self.wait_window(self)
 
+    def buttonbox(self):
+        """
+        OKボタンにbindされているキーをReturnからControl-Returnへ変更するためにオーバーライドした。
+        ダイアログの中でTextウィジェットを使っており、改行のためにReturnキーを使用するため
+        """
+        super().buttonbox()
+
+        self.bind("<Control-Return>", self.ok)
+        self.unbind("<Return>")
+
     def body(self, master) -> None:
         """
         Dialogオブジェクトへ配置するオブジェクトを定義する。
@@ -328,6 +338,18 @@ class DialogForAddTodo(simpledialog.Dialog):
         self.todo_name: Entry = Entry(master)
         self.todo_name.grid(column=1, row=1)
 
+        todo_detail_label: Label = Label(master)
+        todo_detail_label["text"] = "TODOの詳細内容を入力"
+        todo_detail_label["width"] = 25
+        todo_detail_label["fg"] = "black"
+        todo_detail_label["bg"] = "white"
+        todo_detail_label.grid(column=0, row=2)
+
+        self.todo_detail_text: Text = Text(master)
+        self.todo_detail_text["width"] = 30
+        self.todo_detail_text["height"] = 5
+        self.todo_detail_text.grid(column=1, row=2)
+
         self.todo_name_check_message: Message = tk.Message(master)
         self.todo_name_check_message["aspect"] = 300
         self.todo_name_check_message["font"] = ("メイリオ", 9)
@@ -349,8 +371,9 @@ class DialogForAddTodo(simpledialog.Dialog):
         todo_file_name: str = "".join([self.rule_file["string_when_add_todo"]["head"],
                                        self.todo_name.get(),
                                        self.rule_file["string_when_add_todo"]["tail"]])
-        with open(os.path.join(self.items_for_combobox[self.category.get()], todo_file_name), "w") as f:
-            pass
+        with open(os.path.join(self.items_for_combobox[self.category.get()], todo_file_name), "w", encoding="utf_8") \
+                as f:
+            f.write(self.todo_detail_text.get(1.0, END))
 
     def validate(self) -> bool:
         """
@@ -382,29 +405,3 @@ class DialogForAddTodo(simpledialog.Dialog):
             self.todo_name_check_message.grid(column=1, row=2)
             self.todo_name_check_message["text"] = error_msg
             return False
-
-    def buttonbox(self):
-        """
-        OKとCancelボタンを作成するためのメソッド。
-        ボタンの色を変更するためにオーバーライドしている。
-
-        Parameters
-        ----------
-
-        Returns
-        -------
-        None
-        """
-
-        box = tk.Frame(self)
-        box["bg"] = "white"
-
-        w = tk.Button(box, text="OK", width=10, command=self.ok, default=ACTIVE)
-        w.pack(side=LEFT, padx=5, pady=5)
-        w = tk.Button(box, text="Cancel", width=10, command=self.cancel)
-        w.pack(side=LEFT, padx=5, pady=5)
-
-        self.bind("<Return>", self.ok)
-        self.bind("<Escape>", self.cancel)
-
-        box.pack()
