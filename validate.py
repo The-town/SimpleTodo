@@ -2,6 +2,25 @@ from typing import Tuple
 import os
 
 
+def validate_todo_name_empty(todo_name: str) -> Tuple[bool, str]:
+    """
+    TODOファイルの名前が空文字列かチェックする関数
+
+    Parameters
+    ----------
+    todo_name: str
+        todoファイルの名前
+
+    Returns
+    -------
+    Bool: bool, error_msg: str
+        バリデーションチェックに成功したかどうか、および失敗時のエラーメッセージ
+    """
+    if todo_name == "":
+        return False, "名前を入力してください"
+    return True, ""
+
+
 def validate_todo_name(todo_name: str) -> Tuple[bool, str]:
     """
     TODOファイルの名前をチェックする関数
