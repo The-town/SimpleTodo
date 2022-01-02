@@ -5,7 +5,7 @@ import tkinter.ttk as ttk
 import tkinter.scrolledtext as scrolledtext
 import os
 import configparser
-from validate import validate_todo_name, validate_double_todo_name
+from validate import validate_add_todo
 from todo import Todo, ControlTodo
 
 
@@ -350,11 +350,7 @@ class DialogForAddTodo(CustomizeSimpleDialog):
                                        todo_name,
                                        self.rule_file["string_when_add_todo"]["tail"]])
 
-        is_validate_name, error_msg_name = validate_todo_name(todo_name)
-        is_validate_double_name, error_msg_double_name = validate_double_todo_name(todo_file_name, todo_path)
-
-        is_validate: bool = is_validate_name and is_validate_double_name
-        error_msg: str = "\n".join([error_msg_name, error_msg_double_name])
+        is_validate, error_msg = validate_add_todo(todo_path, todo_name, todo_file_name)
 
         if is_validate:
             return True

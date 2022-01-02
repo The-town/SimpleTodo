@@ -2,6 +2,20 @@ from typing import Tuple
 import os
 
 
+def validate_add_todo(todo_path: str, todo_name: str, todo_file_name: str) -> Tuple[bool, str]:
+    is_validate_name_empty, error_msg_empty = validate_todo_name_empty(todo_name)
+    is_validate_name, error_msg_name = validate_todo_name(todo_name)
+    is_validate_double_name, error_msg_double_name = validate_double_todo_name(todo_file_name, todo_path)
+
+    is_validate: bool = is_validate_name_empty and is_validate_name and is_validate_double_name
+    error_msg: str = "\n".join([error_msg_empty, error_msg_name, error_msg_double_name])
+
+    if is_validate:
+        return True, ""
+    else:
+        return False, error_msg
+
+
 def validate_todo_name_empty(todo_name: str) -> Tuple[bool, str]:
     """
     TODOファイルの名前が空文字列かチェックする関数
