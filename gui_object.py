@@ -283,6 +283,7 @@ class DialogForAddTodo(CustomizeSimpleDialog):
         self.category: Combobox = Combobox(master)
         self.category["font"] = ("メイリオ", 11)
         self.category["value"] = list(self.items_for_combobox.keys())
+        self.category.current(0)
         self.category.grid(column=1, row=0)
 
         description_entry_label: Label = Label(master)
