@@ -355,6 +355,6 @@ class DialogForAddTodo(CustomizeSimpleDialog):
         if is_validate:
             return True
         else:
-            self.todo_name_check_message.grid(column=1, row=2)
+            self.todo_name_check_message.grid(column=1, row=3)
             self.todo_name_check_message["text"] = error_msg
             return False
