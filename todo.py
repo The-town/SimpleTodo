@@ -40,13 +40,13 @@ class Todo:
 
     def set_name_from_path(self) -> None:
         """
-        パスからファイル名を抽出して設定するメソッド
+        パスからtodo名を抽出して設定するメソッド
 
         Returns
         -------
         None
         """
-        self.name = os.path.basename(self.path)
+        self.name = os.path.basename(self.path).split(".")[0]
 
     def set_importance_from_filename(self) -> None:
         """
