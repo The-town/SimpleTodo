@@ -247,7 +247,6 @@ class DialogForAddTodo(CustomizeSimpleDialog):
 
         super().__init__(master=master)
 
-
     def buttonbox(self):
         """
         OKボタンにbindされているキーをReturnからControl-Returnへ変更するためにオーバーライドした。
