@@ -4,7 +4,7 @@ from typing import List
 
 from todo import ControlTodo, Todo
 from gui_object import Frame, Label, Listbox, TextForDisplayDetail, Button, Combobox, DialogForAddTodo, \
-    DialogConfirmForCloseTodo, CloseTodoButton
+    DialogConfirmForCloseTodo, DialogForUpdateTodo, CloseTodoButton
 import os
 import subprocess
 
@@ -28,6 +28,11 @@ class TodoDisplay:
         self.close_todo_button = CloseTodoButton(self.function_frame)
         self.close_todo_button.grid(column=6, row=0, padx=5)
         self.close_todo_button["command"] = self.close_todo
+
+        self.update_todo_button = Button(self.function_frame)
+        self.update_todo_button.grid(column=7, row=0, padx=5)
+        self.update_todo_button["text"] = "編集"
+        self.update_todo_button["command"] = self.update_todo
 
         self.refresh_button = Button(master=self.function_frame)
         self.refresh_button.grid(column=4, row=0, padx=5)
@@ -71,6 +76,11 @@ class TodoDisplay:
         """
         dir_names_items: dict = self.control_todo.dir_names_items
         DialogForAddTodo(self.root, items_for_combobox=dir_names_items)
+        self.refresh()
+
+    def update_todo(self, event=None) -> None:
+        todo: Todo = self.todo_display_list.todo_list_box_dict[self.todo_display_list.todo_listbox.index(ACTIVE)]
+        DialogForUpdateTodo(self.root, todo)
         self.refresh()
 
     def close_todo(self, event=None) -> None:

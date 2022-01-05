@@ -5,7 +5,7 @@ import tkinter.ttk as ttk
 import tkinter.scrolledtext as scrolledtext
 import os
 import configparser
-from validate import validate_add_todo
+from validate import validate_add_todo, validate_update_todo
 from todo import Todo, ControlTodo
 
 
@@ -358,3 +358,88 @@ class DialogForAddTodo(CustomizeSimpleDialog):
             self.todo_name_check_message.grid(column=1, row=3)
             self.todo_name_check_message["text"] = error_msg
             return False
+
+
+class DialogForUpdateTodo(CustomizeSimpleDialog):
+    def __init__(self, master, todo: Todo) -> None:
+        self.todo: Todo = todo
+        self.rule_file = configparser.ConfigParser()
+        self.rule_file.read("./config.ini", "UTF-8")
+
+        super().__init__(master)
+
+    def buttonbox(self):
+        """
+        OKボタンにbindされているキーをReturnからControl-Returnへ変更するためにオーバーライドした。
+        ダイアログの中でTextウィジェットを使っており、改行のためにReturnキーを使用するため
+        """
+        super().buttonbox()
+
+        self.bind("<Control-Return>", self.ok)
+        self.unbind("<Return>")
+
+    def body(self, master):
+        """
+        Dialogオブジェクトへ配置するオブジェクトを定義する。
+        Todo名を更新するためにユーザーが入力する情報を受け取るための、GUIオブジェクトを作成している。
+
+        Parameters
+        ----------
+        master:
+            Dialogオブジェクトの親オブジェクト
+
+        Returns
+        -------
+        None
+        """
+        description_entry_label: Label = Label(master)
+        description_entry_label["text"] = "TODO名を入力"
+        description_entry_label["width"] = 25
+        description_entry_label["fg"] = "black"
+        description_entry_label["bg"] = "white"
+        description_entry_label.grid(column=0, row=1)
+
+        self.todo_name: Entry = Entry(master)
+        self.todo_name.insert(0, self.todo.name)
+        self.todo_name.grid(column=1, row=1)
+
+        self.todo_name_check_message: Message = tk.Message(master)
+        self.todo_name_check_message["aspect"] = 300
+        self.todo_name_check_message["font"] = ("メイリオ", 9)
+        self.todo_name_check_message["fg"] = "red"
+        self.todo_name_check_message["bg"] = "white"
+
+    def apply(self):
+        """
+        このDialogオブジェクトが破棄される際に実行される処理を定義する。
+        TODOファイル名を変更する。
+
+        Returns
+        -------
+        None
+        """
+        todo_file_name: str = "".join([self.rule_file["string_when_add_todo"]["head"],
+                                       self.todo_name.get(),
+                                       self.rule_file["string_when_add_todo"]["tail"]])
+
+        os.rename(self.todo.path, os.path.join(os.path.dirname(self.todo.path), todo_file_name))
+
+    def validate(self) -> bool:
+        """
+        TODO名のバリデーションチェックを行う。
+
+        Returns
+        -------
+        is_validate: bool
+        """
+        todo_file_name: str = "".join([self.rule_file["string_when_add_todo"]["head"],
+                                       self.todo_name.get(),
+                                       self.rule_file["string_when_add_todo"]["tail"]])
+
+        is_validate, error_msg = validate_update_todo(self.todo.path, self.todo_name.get(), todo_file_name)
+
+        if not is_validate:
+            self.todo_name_check_message.grid(column=1, row=2)
+            self.todo_name_check_message["text"] = error_msg
+
+        return is_validate

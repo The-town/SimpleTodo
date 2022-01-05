@@ -46,7 +46,11 @@ class Todo:
         -------
         None
         """
+        # [t0d0]xxxx.txt -> [t0d0]xxxx
         self.name = os.path.basename(self.path).split(".")[0]
+
+        # [t0d0]xxxx -> xxxx
+        self.name = self.name.split(self.rule_file["string_when_add_todo"]["head"])[1]
 
     def set_importance_from_filename(self) -> None:
         """

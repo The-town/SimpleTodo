@@ -2,6 +2,33 @@ from typing import Tuple
 import os
 
 
+def validate_update_todo(todo_path: str, todo_name: str, todo_file_name: str) -> Tuple[bool, str]:
+    """
+    TODOファイルの名前を更新する際に実行するチェック関数
+
+    Parameters
+    ----------
+    todo_path: str
+    todo_name: str
+    todo_file_name: str
+
+    Returns
+    -------
+     is_validate, error_msg: Tuple[bool, str]
+    """
+    is_validate_name_empty, error_msg_empty = validate_todo_name_empty(todo_name)
+    is_validate_name, error_msg_name = validate_todo_name(todo_name)
+    is_validate_double_name, error_msg_double_name = validate_double_todo_name(todo_file_name, todo_path)
+
+    is_validate: bool = is_validate_name_empty and is_validate_name and is_validate_double_name
+
+    error_msg: str = ""
+    if not is_validate:
+        error_msg = "\n".join([error_msg_empty, error_msg_name, error_msg_double_name])
+
+    return is_validate, error_msg
+
+
 def validate_add_todo(todo_path: str, todo_name: str, todo_file_name: str) -> Tuple[bool, str]:
     is_validate_name_empty, error_msg_empty = validate_todo_name_empty(todo_name)
     is_validate_name, error_msg_name = validate_todo_name(todo_name)
