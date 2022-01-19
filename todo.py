@@ -240,3 +240,20 @@ class ControlTodo:
             metadata = ":".join([self.rule_file["Meta_data"][key], todo.metadata[key]])
 
         return " ".join([re.sub(r"\[.*\]", "", todo.name), metadata])
+
+    @staticmethod
+    def save_todo(todo: Todo):
+        """
+        todoを保存するメソッド
+
+        Parameters
+        ----------
+        todo: Todo
+            todoオブジェクト
+
+        Returns
+        --------
+        None
+        """
+        with open(todo.path, "w") as todo_file:
+            todo_file.write(todo.detail)
