@@ -166,13 +166,13 @@ class TodoDetailDisplay:
     def display_todo_detail(self) -> None:
         self.text.tag_bind("system_message_file_path", "<Double-Button-1>", self.open_with_another_app)
         self.text.tag_bind("system_message_folder_path", "<Double-Button-1>", self.open_folder)
+        self.text.insert(END, self.todo.detail)
+
+        self.text.insert(END, "\n\n======メタデータ======\n\n")
         self.text.insert(END, "ファイルを開く", "system_message_file_path")
         self.text.insert(END, "\t\t")
         self.text.insert(END, "フォルダを開く", "system_message_folder_path")
         self.text.insert(END, "\n\n")
-        self.text.insert(END, self.todo.detail)
-
-        self.text.insert(END, "\n\n======メタデータ======\n\n")
         self.text.insert(END, "作成 {0} 更新 {1}".format(self.todo.create_time, self.todo.update_time))
         self.text.insert(END, "\n")
         self.text.insert(END, self.todo.path)
@@ -197,7 +197,7 @@ class TodoDetailDisplay:
         --------
         None
         """
-        start_line: str = "2.0"  # 一行目に「ファイルを開く　フォルダを開く」という文字列があるため2行目を始点とする
+        start_line: str = "1.0"
         end_line: str = self.text.search("\n\n======メタデータ======\n\n", 1.0)  # メタデータは保存しないようにしたい
         self.todo.detail = self.text.get(start_line, end_line)
         self.control_todo.save_todo(self.todo)
