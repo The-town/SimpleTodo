@@ -255,5 +255,5 @@ class ControlTodo:
         --------
         None
         """
-        with open(todo.path, "w") as todo_file:
+        with open(todo.path, "w", encoding="utf_8") as todo_file:
             todo_file.write(todo.detail)
