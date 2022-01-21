@@ -161,6 +161,7 @@ class TodoDetailDisplay:
 
         self.text = TextForDisplayDetail(self.todo_detail_frame)
         self.text.bind("<KeyPress>", self.save_todo)
+        self.text.bind("<KeyRelease>", self.save_todo)
 
     def display_todo_detail(self) -> None:
         self.text.tag_bind("system_message_file_path", "<Double-Button-1>", self.open_with_another_app)
