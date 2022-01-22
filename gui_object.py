@@ -283,8 +283,9 @@ class DialogForAddTodo(CustomizeSimpleDialog):
         self.category: Combobox = Combobox(master)
         self.category["font"] = ("メイリオ", 11)
         self.category["value"] = list(self.items_for_combobox.keys())
+        self.category["width"] = 30
         self.category.current(0)
-        self.category.grid(column=1, row=0)
+        self.category.grid(column=1, row=0, sticky=W)
 
         description_entry_label: Label = Label(master)
         description_entry_label["text"] = "追加するTODO名を入力"
@@ -294,7 +295,9 @@ class DialogForAddTodo(CustomizeSimpleDialog):
         description_entry_label.grid(column=0, row=1)
 
         self.todo_name: Entry = Entry(master)
-        self.todo_name.grid(column=1, row=1)
+        self.todo_name.grid(column=1, row=1, sticky=W)
+        self.todo_name["font"] = ("メイリオ", 11)
+        self.todo_name["width"] = 30
 
         todo_detail_label: Label = Label(master)
         todo_detail_label["text"] = "TODOの詳細内容を入力"
@@ -306,7 +309,9 @@ class DialogForAddTodo(CustomizeSimpleDialog):
         self.todo_detail_text: Text = Text(master)
         self.todo_detail_text["width"] = 30
         self.todo_detail_text["height"] = 5
-        self.todo_detail_text.grid(column=1, row=2)
+        self.todo_detail_text["font"] = ("メイリオ", 11)
+        self.todo_detail_text.grid(column=1, row=2, sticky=W)
+
 
         self.todo_name_check_message: Message = tk.Message(master)
         self.todo_name_check_message["aspect"] = 300
