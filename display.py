@@ -177,6 +177,8 @@ class TodoDetailDisplay:
         self.text.insert(END, "\n")
         self.text.insert(END, self.todo.path)
 
+        self.text.edit_reset()  # 上記で挿入している文字列をundoで消去しないように、undo stackをリセットする
+
         self.text.grid(column=0, row=1, columnspan=3)
 
     def open_with_another_app(self, event=None):

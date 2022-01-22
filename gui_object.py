@@ -66,6 +66,7 @@ class Text(scrolledtext.ScrolledText):
         self["width"] = 50
         self["height"] = 20
         self["font"] = ("メイリオ", 12)
+        self["undo"] = True
 
 
 class Entry(ttk.Entry):
