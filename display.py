@@ -159,27 +159,33 @@ class TodoDetailDisplay:
         self.control_todo: ControlTodo = control_todo
         self.todo: Todo = todo
 
-        self.text = TextForDisplayDetail(self.todo_detail_frame)
-        self.text.bind("<KeyPress>", self.save_todo)
-        self.text.bind("<KeyRelease>", self.save_todo)
+        self.detail_text: TextForDisplayDetail = TextForDisplayDetail(self.todo_detail_frame)
+        self.detail_text.bind("<KeyPress>", self.save_todo)
+        self.detail_text.bind("<KeyRelease>", self.save_todo)
+        self.detail_text["height"] = 15
+
+        self.metadata_text: TextForDisplayDetail = TextForDisplayDetail(self.todo_detail_frame)
+        self.metadata_text["height"] = 5
 
     def display_todo_detail(self) -> None:
-        self.text.tag_bind("system_message_file_path", "<Double-Button-1>", self.open_with_another_app)
-        self.text.tag_bind("system_message_folder_path", "<Double-Button-1>", self.open_folder)
-        self.text.insert(END, self.todo.detail)
+        self.detail_text.insert(END, self.todo.detail)
 
-        self.text.insert(END, "\n\n======メタデータ======\n\n")
-        self.text.insert(END, "ファイルを開く", "system_message_file_path")
-        self.text.insert(END, "\t\t")
-        self.text.insert(END, "フォルダを開く", "system_message_folder_path")
-        self.text.insert(END, "\n\n")
-        self.text.insert(END, "作成 {0} 更新 {1}".format(self.todo.create_time, self.todo.update_time))
-        self.text.insert(END, "\n")
-        self.text.insert(END, self.todo.path)
+        self.metadata_text.tag_bind("system_message_file_path", "<Double-Button-1>", self.open_with_another_app)
+        self.metadata_text.tag_bind("system_message_folder_path", "<Double-Button-1>", self.open_folder)
+        self.metadata_text.insert(END, "ファイルを開く", "system_message_file_path")
+        self.metadata_text.insert(END, "\t\t")
+        self.metadata_text.insert(END, "フォルダを開く", "system_message_folder_path")
+        self.metadata_text.insert(END, "\n\n")
+        self.metadata_text.insert(END, "作成 {0} 更新 {1}".format(self.todo.create_time, self.todo.update_time))
+        self.metadata_text.insert(END, "\n")
+        self.metadata_text.insert(END, self.todo.path)
+        self.metadata_text["state"] = "disabled"
 
-        self.text.edit_reset()  # 上記で挿入している文字列をundoで消去しないように、undo stackをリセットする
+        self.detail_text.edit_reset()
+        self.metadata_text.edit_reset()  # 上記で挿入している文字列をundoで消去しないように、undo stackをリセットする
 
-        self.text.grid(column=0, row=1, columnspan=3)
+        self.detail_text.grid(column=0, row=0)
+        self.metadata_text.grid(column=0, row=1)
 
     def open_with_another_app(self, event=None):
         os.system("start " + self.todo.path)
@@ -200,8 +206,8 @@ class TodoDetailDisplay:
         None
         """
         start_line: str = "1.0"
-        end_line: str = self.text.search("\n\n======メタデータ======\n\n", 1.0)  # メタデータは保存しないようにしたい
-        self.todo.detail = self.text.get(start_line, end_line)
+        end_line: str = "end"
+        self.todo.detail = self.detail_text.get(start_line, end_line)
         self.control_todo.save_todo(self.todo)
 
 
