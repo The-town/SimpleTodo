@@ -63,9 +63,9 @@ class Combobox(ttk.Combobox):
 class Text(scrolledtext.ScrolledText):
     def __init__(self, master=None):
         scrolledtext.ScrolledText.__init__(self, master)
-        self["width"] = 50
+        self["width"] = 55
         self["height"] = 20
-        self["font"] = ("メイリオ", 12)
+        self["font"] = ("メイリオ", 11)
         self["undo"] = True
 
 
@@ -92,9 +92,9 @@ class Listbox(tk.Listbox):
         tk.Listbox.__init__(self, master, yscrollcommand=scrollbar.set, selectmode=EXTENDED)
 
         self.pack(side=LEFT, fill=BOTH)
-        self["width"] = 50
+        self["width"] = 55
         self["height"] = 20
-        self["font"] = ("メイリオ", 12)
+        self["font"] = ("メイリオ", 11)
         self.master = master
 
         scrollbar["command"] = self.yview
