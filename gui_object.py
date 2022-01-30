@@ -35,7 +35,7 @@ class Button(tk.Button):
 
         self["height"] = 1
         self["width"] = 10
-        self["font"] = ("メイリオ", 15)
+        self["font"] = ("メイリオ", 11)
 
 
 class RightClickMenu(tk.Menu):
@@ -57,7 +57,7 @@ class Combobox(ttk.Combobox):
     def __init__(self, master=None):
         ttk.Combobox.__init__(self, master)
 
-        self["font"] = ("メイリオ", 15)
+        self["font"] = ("メイリオ", 11)
 
 
 class Text(scrolledtext.ScrolledText):
