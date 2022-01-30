@@ -20,13 +20,11 @@ class TodoDisplay:
         self.function_frame = Frame(self.root)
         self.function_frame.grid(column=0, columnspan=2, row=0)
 
-        self.add_todo_button = Button(master=self.function_frame)
-        self.add_todo_button.grid(column=5, row=0, padx=5)
-        self.add_todo_button["text"] = "追加"
-        self.add_todo_button["command"] = self.add_todo
+        self.todo_frame: Frame = Frame(self.root)
+        self.todo_frame.grid(column=0, row=1)
 
         self.refresh_button = Button(master=self.function_frame)
-        self.refresh_button.grid(column=4, row=0, padx=5)
+        self.refresh_button.grid(column=2, row=0, columnspan=2, padx=5)
         self.refresh_button["text"] = "更新"
         self.refresh_button["command"] = self.refresh
 
@@ -48,6 +46,7 @@ class TodoDisplay:
 
         self.right_click_menu: RightClickMenu = RightClickMenu(self.root)
         self.right_click_menu.add("command", label="TODOの名前を変更する", command=self.update_todo)
+        self.right_click_menu.add("command", label="TODOを追加する", command=self.add_todo)
         self.right_click_menu.add("command", label="TODOを完了にする", command=self.close_todo)
 
         self.todo_display_list: TodoListDisplay = TodoListDisplay(master=self.root, control_todo=self.control_todo)
