@@ -38,14 +38,14 @@ class Button(tk.Button):
         self["font"] = ("メイリオ", 15)
 
 
-class CloseTodoButton(tk.Button):
+class RightClickMenu(tk.Menu):
     def __init__(self, master=None):
-        tk.Button.__init__(self, master)
+        tk.Menu.__init__(self, master)
+        master.bind("<Button-3>", self.create_menu)
+        self["tearoff"] = 0
 
-        self["height"] = 1
-        self["width"] = 10
-        self["font"] = ("メイリオ", 15)
-        self["text"] = "完了"
+    def create_menu(self, event=None):
+        self.post(event.x_root, event.y_root)
 
 
 class RefreshButton(Button):

@@ -4,7 +4,7 @@ from typing import List
 
 from todo import ControlTodo, Todo
 from gui_object import Frame, Label, Listbox, TextForDisplayDetail, Button, Combobox, DialogForAddTodo, \
-    DialogConfirmForCloseTodo, DialogForUpdateTodo, CloseTodoButton
+    DialogConfirmForCloseTodo, DialogForUpdateTodo, RightClickMenu
 import os
 import subprocess
 
@@ -24,15 +24,6 @@ class TodoDisplay:
         self.add_todo_button.grid(column=5, row=0, padx=5)
         self.add_todo_button["text"] = "追加"
         self.add_todo_button["command"] = self.add_todo
-
-        self.close_todo_button = CloseTodoButton(self.function_frame)
-        self.close_todo_button.grid(column=6, row=0, padx=5)
-        self.close_todo_button["command"] = self.close_todo
-
-        self.update_todo_button = Button(self.function_frame)
-        self.update_todo_button.grid(column=7, row=0, padx=5)
-        self.update_todo_button["text"] = "編集"
-        self.update_todo_button["command"] = self.update_todo
 
         self.refresh_button = Button(master=self.function_frame)
         self.refresh_button.grid(column=4, row=0, padx=5)
@@ -54,6 +45,10 @@ class TodoDisplay:
         self.sort_combobox = Combobox(master=self.function_frame)
         self.sort_combobox.grid(column=1, row=0, padx=(0, 100))
         self.set_value_for_sort_combobox()
+
+        self.right_click_menu: RightClickMenu = RightClickMenu(self.root)
+        self.right_click_menu.add("command", label="TODOの名前を変更する", command=self.update_todo)
+        self.right_click_menu.add("command", label="TODOを完了にする", command=self.close_todo)
 
         self.todo_display_list: TodoListDisplay = TodoListDisplay(master=self.root, control_todo=self.control_todo)
         self.todo_display_list.display_todo_list(self.dir_combobox.get(), self.sort_combobox.get())
