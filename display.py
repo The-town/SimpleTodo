@@ -18,7 +18,7 @@ class TodoDisplay:
         self.control_todo = ControlTodo()
 
         self.function_frame = Frame(self.root)
-        self.function_frame.grid(column=0, columnspan=2, row=0)
+        self.function_frame.grid(column=0, row=0)
 
         self.todo_frame: Frame = Frame(self.root)
         self.todo_frame.grid(column=0, row=1)
@@ -28,20 +28,12 @@ class TodoDisplay:
         self.refresh_button["text"] = "更新"
         self.refresh_button["command"] = self.refresh
 
-        self.sort_label: Label = Label(master=self.function_frame)
-        self.sort_label["text"] = "フィルタ"
-        self.sort_label.grid(column=0, row=1)
-
         self.dir_combobox = Combobox(master=self.function_frame)
-        self.dir_combobox.grid(column=1, row=1, padx=(0, 100))
+        self.dir_combobox.grid(column=1, row=0, padx=(0, 10))
         self.set_value_for_dir_combobox()
 
-        self.sort_label: Label = Label(master=self.function_frame)
-        self.sort_label["text"] = "ソート方法"
-        self.sort_label.grid(column=0, row=0)
-
         self.sort_combobox = Combobox(master=self.function_frame)
-        self.sort_combobox.grid(column=1, row=0, padx=(0, 100))
+        self.sort_combobox.grid(column=0, row=0, padx=(0, 10))
         self.set_value_for_sort_combobox()
 
         self.right_click_menu: RightClickMenu = RightClickMenu(self.root)
@@ -49,7 +41,7 @@ class TodoDisplay:
         self.right_click_menu.add("command", label="TODOを追加する", command=self.add_todo)
         self.right_click_menu.add("command", label="TODOを完了にする", command=self.close_todo)
 
-        self.todo_display_list: TodoListDisplay = TodoListDisplay(master=self.root, control_todo=self.control_todo)
+        self.todo_display_list: TodoListDisplay = TodoListDisplay(master=self.todo_frame, control_todo=self.control_todo)
         self.todo_display_list.display_todo_list(self.dir_combobox.get(), self.sort_combobox.get())
 
     def refresh(self, event=None):
