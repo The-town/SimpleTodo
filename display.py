@@ -45,7 +45,6 @@ class TodoDisplay:
         self.todo_display_list.display_todo_list(self.dir_combobox.get(), self.sort_combobox.get())
 
     def refresh(self, event=None):
-        self.todo_display_list: TodoListDisplay = TodoListDisplay(master=self.root, control_todo=self.control_todo)
         self.todo_display_list.display_todo_list(self.dir_combobox.get(), self.sort_combobox.get())
 
     def add_todo(self, event=None):
@@ -111,6 +110,8 @@ class TodoListDisplay:
         self.todo_list_box_dict: dict = {}
 
     def display_todo_list(self, todo_directory: str, sort_method: str) -> None:
+        self.todo_listbox.delete(0, END)
+
         todo_list_box_id = 0
         self.todo_list_box_dict = {}
         todos: List[Todo] = self.get_paths_which_todo_file_have(self.control_todo, todo_directory, sort_method)
