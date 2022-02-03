@@ -241,8 +241,9 @@ class DialogConfirmForCloseTodo(CustomizeSimpleDialog):
 
 
 class DialogForAddTodo(CustomizeSimpleDialog):
-    def __init__(self, master, items_for_combobox) -> None:
+    def __init__(self, master, items_for_combobox: dict, combobox_value: str) -> None:
         self.items_for_combobox: dict = items_for_combobox
+        self.current_combobox_value: str = combobox_value
         self.rule_file = configparser.ConfigParser()
         self.rule_file.read("./config.ini", "UTF-8")
 
@@ -284,7 +285,10 @@ class DialogForAddTodo(CustomizeSimpleDialog):
         self.category["font"] = ("メイリオ", 11)
         self.category["value"] = list(self.items_for_combobox.keys())
         self.category["width"] = 30
-        self.category.current(0)
+        if self.current_combobox_value in list(self.items_for_combobox.keys()):
+            self.category.current(list(self.items_for_combobox.keys()).index(self.current_combobox_value))
+        else:
+            self.category.current(0)
         self.category.grid(column=1, row=0, sticky=W)
 
         description_entry_label: Label = Label(master)
