@@ -18,22 +18,19 @@ class TodoDisplay:
         self.control_todo = ControlTodo()
 
         self.function_frame = Frame(self.root)
-        self.function_frame.grid(column=0, row=0)
+        self.function_frame.pack(side="top", fill="x", expand=True)
 
         self.todo_frame: Frame = Frame(self.root)
-        self.todo_frame.grid(column=0, row=1)
+        self.todo_frame.pack(side="bottom", fill="both", expand=True)
 
         self.refresh_button = Button(master=self.function_frame)
-        self.refresh_button.grid(column=2, row=0, columnspan=2, padx=5)
         self.refresh_button["text"] = "更新"
         self.refresh_button["command"] = self.refresh
 
         self.dir_combobox = Combobox(master=self.function_frame)
-        self.dir_combobox.grid(column=1, row=0, padx=(0, 10))
         self.set_value_for_dir_combobox()
 
         self.sort_combobox = Combobox(master=self.function_frame)
-        self.sort_combobox.grid(column=0, row=0, padx=(0, 10))
         self.set_value_for_sort_combobox()
 
         self.right_click_menu: RightClickMenu = RightClickMenu(self.root)
@@ -43,6 +40,10 @@ class TodoDisplay:
 
         self.todo_display_list: TodoListDisplay = TodoListDisplay(master=self.todo_frame, control_todo=self.control_todo)
         self.todo_display_list.display_todo_list(self.dir_combobox.get(), self.sort_combobox.get())
+
+        self.sort_combobox.pack(side="left")
+        self.dir_combobox.pack(side="left")
+        self.refresh_button.pack(side="left")
 
     def refresh(self, event=None):
         self.todo_display_list.display_todo_list(self.dir_combobox.get(), self.sort_combobox.get())
@@ -100,7 +101,7 @@ class TodoListDisplay:
     def __init__(self, master, control_todo: ControlTodo) -> None:
         self.master = master
         todo_list_frame = Frame(self.master)
-        todo_list_frame.grid(column=0, row=1)
+        todo_list_frame.pack(side="left", fill="both", expand=True)
 
         self.todo_listbox = Listbox(master=todo_list_frame)
         self.todo_listbox.bind("<Button-1>", self.display_todo_detail)
@@ -108,6 +109,8 @@ class TodoListDisplay:
 
         self.control_todo: ControlTodo = control_todo
         self.todo_list_box_dict: dict = {}
+
+        self.todo_detail: TodoDetailDisplay = TodoDetailDisplay(master=self.master)
 
     def display_todo_list(self, todo_directory: str, sort_method: str) -> None:
         self.todo_listbox.delete(0, END)
@@ -127,8 +130,10 @@ class TodoListDisplay:
             self.todo_listbox.activate_line_clicked(event=event)
 
         todo: Todo = self.todo_list_box_dict[self.todo_listbox.index(ACTIVE)]
-        todo_detail: TodoDetailDisplay = TodoDetailDisplay(todo, self.control_todo, self.master)
-        todo_detail.display_todo_detail()
+
+        self.todo_detail.todo = todo
+        self.todo_detail.control_todo = self.control_todo
+        self.todo_detail.display_todo_detail()
 
     @staticmethod
     def get_paths_which_todo_file_have(control_todo: ControlTodo, directory: str, sort_method: str):
@@ -139,9 +144,9 @@ class TodoListDisplay:
 
 
 class TodoDetailDisplay:
-    def __init__(self, todo: Todo, control_todo: ControlTodo, master=None) -> None:
+    def __init__(self, todo: Todo = None, control_todo: ControlTodo = None, master=None) -> None:
         self.todo_detail_frame = Frame(master)
-        self.todo_detail_frame.grid(column=1, row=1)
+        self.todo_detail_frame.pack(side="left", fill="both", expand=True)
 
         self.control_todo: ControlTodo = control_todo
         self.todo: Todo = todo
@@ -154,8 +159,12 @@ class TodoDetailDisplay:
         self.metadata_text: TextForDisplayDetail = TextForDisplayDetail(self.todo_detail_frame)
         self.metadata_text["height"] = 5
 
+        self.detail_text.pack(side="top", fill="both", expand=True)
+        self.metadata_text.pack(side="bottom", fill="both", expand=True)
+
     def display_todo_detail(self) -> None:
-        self.detail_text.insert(END, self.todo.detail)
+        self.detail_text.delete(1.0, END)
+        self.detail_text.insert(1.0, self.todo.detail)
 
         self.metadata_text.tag_bind("system_message_file_path", "<Double-Button-1>", self.open_with_another_app)
         self.metadata_text.tag_bind("system_message_folder_path", "<Double-Button-1>", self.open_folder)
@@ -170,9 +179,6 @@ class TodoDetailDisplay:
 
         self.detail_text.edit_reset()
         self.metadata_text.edit_reset()  # 上記で挿入している文字列をundoで消去しないように、undo stackをリセットする
-
-        self.detail_text.grid(column=0, row=0)
-        self.metadata_text.grid(column=0, row=1)
 
     def open_with_another_app(self, event=None):
         os.system("start " + self.todo.path)
@@ -194,7 +200,8 @@ class TodoDetailDisplay:
         """
         start_line: str = "1.0"
         end_line: str = "end"
-        self.todo.detail = self.detail_text.get(start_line, end_line)
+        self.todo.detail = self.detail_text.get(start_line, end_line)[:-1]  # getをした際に、改行文字列が入るため除去
+        print(len(self.todo.detail.split("\n")))
         self.control_todo.save_todo(self.todo)
 
 

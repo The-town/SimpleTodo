@@ -12,7 +12,6 @@ from todo import Todo, ControlTodo
 class Frame(tk.Frame):
     def __init__(self, master=None):
         tk.Frame.__init__(self, master)
-        self.grid(column=0, row=0)
         self["width"] = 100
         self["height"] = 100
         self["padx"] = 10
@@ -91,7 +90,7 @@ class Listbox(tk.Listbox):
         scrollbar.pack(side=RIGHT, fill=Y)
         tk.Listbox.__init__(self, master, yscrollcommand=scrollbar.set, selectmode=EXTENDED)
 
-        self.pack(side=LEFT, fill=BOTH)
+        self.pack(side=LEFT, fill=BOTH, expand=True)
         self["width"] = 55
         self["height"] = 20
         self["font"] = ("メイリオ", 11)
