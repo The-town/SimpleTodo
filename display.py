@@ -30,23 +30,28 @@ class TodoDisplay:
         self.dir_combobox = Combobox(master=self.function_frame)
         self.set_value_for_dir_combobox()
 
-        self.sort_combobox = Combobox(master=self.function_frame)
-        self.set_value_for_sort_combobox()
-
         self.right_click_menu: RightClickMenu = RightClickMenu(self.root)
+        self.right_click_menu.add("command", label="期限で並べ替える", command=self.sort_todo_with_limit)
+        self.right_click_menu.add("command", label="重要度で並べ替える", command=self.sort_todo_with_importance)
+        self.right_click_menu.add_separator()
         self.right_click_menu.add("command", label="TODOの名前を変更する", command=self.update_todo)
         self.right_click_menu.add("command", label="TODOを追加する", command=self.add_todo)
         self.right_click_menu.add("command", label="TODOを完了にする", command=self.close_todo)
 
         self.todo_display_list: TodoListDisplay = TodoListDisplay(master=self.todo_frame, control_todo=self.control_todo)
-        self.todo_display_list.display_todo_list(self.dir_combobox.get(), self.sort_combobox.get())
+        self.todo_display_list.display_todo_list(self.dir_combobox.get())
 
-        self.sort_combobox.pack(side="left")
         self.dir_combobox.pack(side="left")
         self.refresh_button.pack(side="left")
 
     def refresh(self, event=None):
-        self.todo_display_list.display_todo_list(self.dir_combobox.get(), self.sort_combobox.get())
+        self.todo_display_list.display_todo_list(self.dir_combobox.get())
+
+    def sort_todo_with_limit(self, event=None):
+        self.todo_display_list.display_todo_list(self.dir_combobox.get(), "期限")
+
+    def sort_todo_with_importance(self, event=None):
+        self.todo_display_list.display_todo_list(self.dir_combobox.get(), "重要度")
 
     def add_todo(self, event=None):
         """
@@ -89,10 +94,6 @@ class TodoDisplay:
         self.dir_combobox["value"] = ["all"] + self.control_todo.get_dir_name_keys()
         self.dir_combobox.current(0)
 
-    def set_value_for_sort_combobox(self):
-        self.sort_combobox["value"] = ["重要度", "期限"]
-        self.sort_combobox.current(1)
-
     def mainloop(self):
         self.root.mainloop()
 
@@ -112,7 +113,7 @@ class TodoListDisplay:
 
         self.todo_detail: TodoDetailDisplay = TodoDetailDisplay(master=self.master)
 
-    def display_todo_list(self, todo_directory: str, sort_method: str) -> None:
+    def display_todo_list(self, todo_directory: str, sort_method: str = "期限") -> None:
         self.todo_listbox.delete(0, END)
 
         todo_list_box_id = 0
