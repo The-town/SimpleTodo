@@ -3,7 +3,7 @@ import tkinter as tk
 from typing import List
 
 from todo import ControlTodo, Todo
-from gui_object import Frame, Label, Listbox, TextForDisplayDetail, Button, Combobox, DialogForAddTodo, \
+from gui_object import Frame, Listbox, TextForDisplayDetail, DialogForAddTodo, \
     DialogConfirmForCloseTodo, DialogForUpdateTodo, RightClickMenu
 import os
 import subprocess
@@ -17,41 +17,27 @@ class TodoDisplay:
 
         self.control_todo = ControlTodo()
 
-        self.function_frame = Frame(self.root)
-        self.function_frame.pack(side="top", fill="x", expand=True)
-
         self.todo_frame: Frame = Frame(self.root)
         self.todo_frame.pack(side="bottom", fill="both", expand=True)
 
-        self.refresh_button = Button(master=self.function_frame)
-        self.refresh_button["text"] = "更新"
-        self.refresh_button["command"] = self.refresh
-
-        self.dir_combobox = Combobox(master=self.function_frame)
-        self.set_value_for_dir_combobox()
-
         self.right_click_menu: RightClickMenu = RightClickMenu(self.root)
-        self.right_click_menu.add("command", label="期限で並べ替える", command=self.sort_todo_with_limit)
-        self.right_click_menu.add("command", label="重要度で並べ替える", command=self.sort_todo_with_importance)
-        self.right_click_menu.add_separator()
-        self.right_click_menu.add("command", label="TODOの名前を変更する", command=self.update_todo)
-        self.right_click_menu.add("command", label="TODOを追加する", command=self.add_todo)
-        self.right_click_menu.add("command", label="TODOを完了にする", command=self.close_todo)
+        self.dir_name_var: StringVar = StringVar()
+
+        self.right_click_menu.set_value_for_select_dir_menu(self.dir_name_var, self.control_todo, self.refresh)
+        self.right_click_menu.set_value_for_control_todo_menu(self.update_todo, self.add_todo, self.close_todo)
+        self.right_click_menu.set_value_for_select_sort_menu(self.sort_todo_with_limit, self.sort_todo_with_importance)
 
         self.todo_display_list: TodoListDisplay = TodoListDisplay(master=self.todo_frame, control_todo=self.control_todo)
-        self.todo_display_list.display_todo_list(self.dir_combobox.get())
-
-        self.dir_combobox.pack(side="left")
-        self.refresh_button.pack(side="left")
+        self.todo_display_list.display_todo_list(self.dir_name_var.get())
 
     def refresh(self, event=None):
-        self.todo_display_list.display_todo_list(self.dir_combobox.get())
+        self.todo_display_list.display_todo_list(self.dir_name_var.get())
 
     def sort_todo_with_limit(self, event=None):
-        self.todo_display_list.display_todo_list(self.dir_combobox.get(), "期限")
+        self.todo_display_list.display_todo_list(self.dir_name_var.get(), "期限")
 
     def sort_todo_with_importance(self, event=None):
-        self.todo_display_list.display_todo_list(self.dir_combobox.get(), "重要度")
+        self.todo_display_list.display_todo_list(self.dir_name_var.get(), "重要度")
 
     def add_todo(self, event=None):
         """
@@ -66,7 +52,7 @@ class TodoDisplay:
         None
         """
         dir_names_items: dict = self.control_todo.dir_names_items
-        DialogForAddTodo(self.root, dir_names_items, self.dir_combobox.get())
+        DialogForAddTodo(self.root, dir_names_items, self.dir_name_var.get())
         self.refresh()
 
     def update_todo(self, event=None) -> None:
@@ -89,10 +75,6 @@ class TodoDisplay:
         todo: Todo = self.todo_display_list.todo_list_box_dict[self.todo_display_list.todo_listbox.index(ACTIVE)]
         DialogConfirmForCloseTodo(self.root, self.control_todo, todo)
         self.refresh()
-
-    def set_value_for_dir_combobox(self):
-        self.dir_combobox["value"] = ["all"] + self.control_todo.get_dir_name_keys()
-        self.dir_combobox.current(0)
 
     def mainloop(self):
         self.root.mainloop()

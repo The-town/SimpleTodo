@@ -46,6 +46,29 @@ class RightClickMenu(tk.Menu):
     def create_menu(self, event=None):
         self.post(event.x_root, event.y_root)
 
+    def set_value_for_control_todo_menu(self, update_command, add_command, close_command):
+        self.add("command", label="TODOの名前を変更する", command=update_command)
+        self.add("command", label="TODOを追加する", command=add_command)
+        self.add("command", label="TODOを完了にする", command=close_command)
+        self.add_separator()
+
+    def set_value_for_select_sort_menu(self, limit_sort_command, import_sort_command):
+        self.add("command", label="期限で並べ替える", command=limit_sort_command)
+        self.add("command", label="重要度で並べ替える", command=import_sort_command)
+        self.add_separator()
+
+    def set_value_for_select_dir_menu(self, dir_name_var, control_todo, command):
+        dir_name_var.set("")
+
+        dir_menu: RightClickMenu = RightClickMenu(self)
+        self.add_cascade(label="フォルダを選択", menu=dir_menu)
+
+        dir_menu.add_radiobutton(label="全て", value="all", variable=dir_name_var, command=command)
+        for dir_name in control_todo.get_dir_name_keys():
+            dir_menu.add_radiobutton(label=dir_name, value=dir_name, variable=dir_name_var, command=command)
+
+        self.add_separator()
+
 
 class RefreshButton(Button):
     def __init__(self, master=None,):
