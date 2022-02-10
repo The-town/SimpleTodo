@@ -1,63 +1,50 @@
 # Simple Todo
 
-## 概要
+[日本語のREADME](./doc/README-JA.md)
 
-**Simple Todo**とはテキストファイルを使用したTODO管理アプリケーションです。
-やるべきことを忘れないようにでき、やりたいことを残せるようになります。
+## Overview
 
-
+**Simple Todo** is todo application using text file.
 
 ![todo_public_ver_1](./doc_img/todo_public_ver_1.jpg)
 
+## Usage
 
+1. You register folder which **Simple Todo** search.
+2. Put the string **[todo]** at the beginning of the file name in the folder.
+3. If the file name contains the string **[todo]**, **Simple Todo** will display the 
+file in the list screen.
+   If the file is a text file, it will be displayed in the detail screen.
+   
+_The string you use does not have to be **[todo]**._  
+_You can specify any string in the configuration file._
 
-## 使い方
+## Features
 
-1. 普段使っているフォルダを**Simple Todo**へ登録します。
-2. フォルダの中にある、これから作業する予定のファイル名の先頭に **[todo]** という文字列を入れます。
-3.  **[todo]** という文字列がファイル名にある場合、**Simple TODO**はそのファイルを一覧画面へ表示します。また、テキストファイルの場合はその内容を詳細画面へ表示します。
+### Use text files for data storage
 
+The use of text files has improved data reusability and portability.
+Even if you don't use **Simple Todo** anymore, todo will remain.
 
+### Simple
 
-> 使用する文字列は[todo]出なくても構いません。任意の文字列を指定可能です。
+Compare other todo application, **Simple Todo** is very simple. 
 
+* Add todo
+* Display todo list
+* Display todo detail
+* Coloring by important
+* Sort by limit or important
+* Filtering by folder
 
+## How to Start
 
-## 特徴
+### Configuration
 
-### データの保管にテキストファイルを使用
+Configuration file is **config.ini**.
+Format is following.
 
-テキストファイルを使用することでデータの再利用性・移行性を高めました。  
-また、テキストファイルの操作は他のアプリケーションからも容易です。
-
-TODOを記録したテキストファイルはこのアプリケーション以外からでも読み込めます。
-このアプリケーションを使わなくなっても、あなたが行ってきたTODOは残るのです。
-
-### 単純さ
-
-他のTODOアプリケーションに比べて機能はずっと少ないです。  
-
-* TODO追加
-* TODOの一覧表示
-* 重要度での色分け
-* 期限・重要度での並び替え
-* TODOの詳細確認
-
-
-### 実装
-
-Pythonのみで実装されています。  
-GUI部分はTkinterを使用しています。
-
-
-
-## 始め方
-
-
-
-### 設定
-
-設定ファイルは**config.ini**という名前のファイルで以下のフォーマットで記載します。
+TODO Japanese to English
 
 ```ini
 [Dir_names]
@@ -109,13 +96,9 @@ C=green
 
 **※2  TODOファイルの文字コードはUTF-8にしてください。詳細画面が表示されません。**
 
-
-
 ### 実行方法
 
 > python display.py
-
-
 
 ## 文書一覧
 
