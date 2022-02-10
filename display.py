@@ -149,6 +149,8 @@ class TodoDetailDisplay:
         self.detail_text.delete(1.0, END)
         self.detail_text.insert(1.0, self.todo.detail)
 
+        self.metadata_text["state"] = "normal"
+        self.metadata_text.delete(1.0, END)
         self.metadata_text.tag_bind("system_message_file_path", "<Double-Button-1>", self.open_with_another_app)
         self.metadata_text.tag_bind("system_message_folder_path", "<Double-Button-1>", self.open_folder)
         self.metadata_text.insert(END, "ファイルを開く", "system_message_file_path")
