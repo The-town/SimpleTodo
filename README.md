@@ -48,40 +48,46 @@ TODO Japanese to English
 
 ```ini
 [Dir_names]
-#プルダウンに表示される名前=TODOファイルを格納しているフォルダの絶対パス
-#例
-#F:\Document\800_IT自己学習\09_python\51_QiitaというフォルダにTODOファイルを格納する場合
-qiita=F:\Document\800_IT自己学習\09_python\51_Qiita
+# name=path
+# "name" is displayed name in select folder which right click.
+# example
+# F:\Document\example
+example=F:\Document\example
 
 [File_names]
-#TODOリスト一覧に表示したいファイル名。ワイルドカード(*)を使用できます。
-#例
+# String which this application search for display file to list screen.
+# Can use wildcard (*).
 
-#先頭にtodoという文字列があるファイル
+# example
+# Head "todo"
 todo=todo*
 
-#拡張子がpyのファイル
+# python file
 python=*.py
 
 [Importance_color]
-#重要度を表すためにファイル名で使用する文字列と対応する色
-#defaultは重要度の文字列が入っていないファイルに対して使用される色です。
-#色はredやblueなどの文字列で指定します。
+# "A" adn "B", "C" express importance.
+# A > B > C
+# These string contain file name.
+# [todo][A]example.txt
+#
+# "default" will use when not specified string.
+#
+# Color specify string such as white or red, yellow.
 default=white
 A=red
 B=yellow
 C=green
 
 [Meta_data]
-#メタデータとして使用するファイル内の文字列の位置とメタデータのキー名
-#TODOファイルのファイル名のうち[#metadata]のように、[]で囲まれた#で始まる文字をメタデータとして認識します。
-# example: [#2020/09/01][#機能追加]example.txtとすれば期限:2020/09/01 カテゴリ:機能追加となります。
-#          [#][#機能追加]example.txtとすればカテゴリ:機能追加となります（#しかないため期限は無視される）。
-1=期限
-2=カテゴリ
+# Metadata index and key.
+# [todo][A][#metadata1][#metadata2]example.txt
+# You set metadata such as [#metadata].
+# example: [#2020/09/01][#Add Function]example.txt -> limit:2020/09/01 category:Add Function
+#          [#][#Add Function]example.txt -> category:Add Function
+limit=limit
+category=category
 ```
-
-
 
 **config.ini**を編集する際の注意点になります。
 
@@ -96,11 +102,11 @@ C=green
 
 **※2  TODOファイルの文字コードはUTF-8にしてください。詳細画面が表示されません。**
 
-### 実行方法
+### How to Run
 
 > python display.py
 
-## 文書一覧
+## Document
 
 [Simple Todo で実現したいこと](./doc/SimpleTodoで実現したいこと.md)
 
