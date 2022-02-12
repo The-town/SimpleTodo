@@ -237,7 +237,7 @@ class ControlTodo:
         """
         metadata: str = ""
         for key in todo.metadata.keys():
-            metadata = ":".join([self.rule_file["Meta_data"][key], todo.metadata[key]])
+            metadata = " ".join([metadata, ":".join([self.rule_file["Meta_data"][key], todo.metadata[key]])])
 
         return " ".join([re.sub(r"\[.*\]", "", todo.name), metadata])
 
