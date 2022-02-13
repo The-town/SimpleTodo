@@ -5,7 +5,6 @@ import config
 import re
 import os
 import datetime
-from flatten import flatten
 
 
 class Todo:
