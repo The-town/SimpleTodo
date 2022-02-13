@@ -1,7 +1,7 @@
 from typing import Tuple, List
 
 from operate_file_1 import get_all_files
-import configparser
+import config
 import re
 import os
 import datetime
@@ -29,9 +29,6 @@ class Todo:
         self.update_time: str = ""
         self.metadata: dict = {}
 
-        self.rule_file = configparser.ConfigParser()
-        self.rule_file.read("./config.ini", "UTF-8")
-
         self.set_name_from_path()
         self.set_importance_from_filename()
         self.set_metadata_from_filename()
@@ -50,7 +47,7 @@ class Todo:
         self.name = os.path.basename(self.path).split(".")[0]
 
         # [t0d0]xxxx -> xxxx
-        self.name = self.name.split(self.rule_file["string_when_add_todo"]["head"])[1]
+        self.name = self.name.split(config.rule_file["string_when_add_todo"]["head"])[1]
 
     def set_importance_from_filename(self) -> None:
         """
@@ -62,7 +59,7 @@ class Todo:
         """
         pattern = r"\[[{0}]\]".format(
             "|".join(
-                [key.upper() for key in self.rule_file["Importance_color"].keys()]
+                [key.upper() for key in config.rule_file["Importance_color"].keys()]
             )
         )
         re_pattern = re.compile(pattern)
@@ -70,7 +67,7 @@ class Todo:
             self.importance = re_pattern.search(self.name).group()[1]
         else:
             self.importance = "default"
-        self.importance_color = self.rule_file["Importance_color"][self.importance]
+        self.importance_color = config.rule_file["Importance_color"][self.importance]
 
     def set_metadata_from_filename(self) -> None:
         """
@@ -86,7 +83,7 @@ class Todo:
         if metadata_list:
             for i, metadata in enumerate(metadata_list):
                 if metadata != "#":
-                    self.metadata[list(self.rule_file["Meta_data"].keys())[i]] = metadata
+                    self.metadata[list(config.rule_file["Meta_data"].keys())[i]] = metadata
 
     def set_todo_timestamp(self) -> None:
         """
@@ -119,13 +116,10 @@ class Todo:
 class ControlTodo:
     def __init__(self):
 
-        self.rule_file = configparser.ConfigParser()
-        self.rule_file.read("./config.ini", "UTF-8")
-
-        self.dir_names_items: dict = dict(self.rule_file["Dir_names"].items())
-        self.dir_name_keys = list(self.rule_file["Dir_names"].keys())
-        self.dir_names = [self.rule_file["Dir_names"][key] for key in self.rule_file["Dir_names"].keys()]
-        self.patterns = [self.rule_file["File_names"][key] for key in self.rule_file["File_names"].keys()]
+        self.dir_names_items: dict = dict(config.rule_file["Dir_names"].items())
+        self.dir_name_keys = list(config.rule_file["Dir_names"].keys())
+        self.dir_names = [config.rule_file["Dir_names"][key] for key in config.rule_file["Dir_names"].keys()]
+        self.patterns = [config.rule_file["File_names"][key] for key in config.rule_file["File_names"].keys()]
 
     def get_paths_which_result_of_search(self, directory_name):
         if directory_name == "all" or directory_name == "":
@@ -162,7 +156,7 @@ class ControlTodo:
             Todoオブジェクトのリスト
         """
         todos: List[Todo] = [Todo(path) for path in
-                             get_all_files(self.rule_file["Dir_names"][dir_name_key], ";".join(self.patterns))]
+                             get_all_files(config.rule_file["Dir_names"][dir_name_key], ";".join(self.patterns))]
         return todos
 
     def sort_todo(self, todos: List[Todo], method: str):
@@ -237,7 +231,7 @@ class ControlTodo:
         """
         metadata: str = ""
         for key in todo.metadata.keys():
-            metadata = " ".join([metadata, ":".join([self.rule_file["Meta_data"][key], todo.metadata[key]])])
+            metadata = " ".join([metadata, ":".join([config.rule_file["Meta_data"][key], todo.metadata[key]])])
 
         return " ".join([re.sub(r"\[.*\]", "", todo.name), metadata])
 

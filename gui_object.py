@@ -4,9 +4,9 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import tkinter.scrolledtext as scrolledtext
 import os
-import configparser
 from validate import validate_add_todo, validate_update_todo
 from todo import Todo, ControlTodo
+import config
 
 
 class Frame(tk.Frame):
@@ -266,8 +266,6 @@ class DialogForAddTodo(CustomizeSimpleDialog):
     def __init__(self, master, items_for_combobox: dict, combobox_value: str) -> None:
         self.items_for_combobox: dict = items_for_combobox
         self.current_combobox_value: str = combobox_value
-        self.rule_file = configparser.ConfigParser()
-        self.rule_file.read("./config.ini", "UTF-8")
 
         super().__init__(master=master)
 
@@ -357,9 +355,9 @@ class DialogForAddTodo(CustomizeSimpleDialog):
         -------
         None
         """
-        todo_file_name: str = "".join([self.rule_file["string_when_add_todo"]["head"],
+        todo_file_name: str = "".join([config.rule_file["string_when_add_todo"]["head"],
                                        self.todo_name.get(),
-                                       self.rule_file["string_when_add_todo"]["tail"]])
+                                       config.rule_file["string_when_add_todo"]["tail"]])
         with open(os.path.join(self.items_for_combobox[self.category.get()], todo_file_name), "w", encoding="utf_8") \
                 as f:
             f.write(self.todo_detail_text.get(1.0, END))
@@ -378,9 +376,9 @@ class DialogForAddTodo(CustomizeSimpleDialog):
         """
         todo_path: str = self.items_for_combobox[self.category.get()]
         todo_name: str = self.todo_name.get()
-        todo_file_name: str = "".join([self.rule_file["string_when_add_todo"]["head"],
+        todo_file_name: str = "".join([config.rule_file["string_when_add_todo"]["head"],
                                        todo_name,
-                                       self.rule_file["string_when_add_todo"]["tail"]])
+                                       config.rule_file["string_when_add_todo"]["tail"]])
 
         is_validate, error_msg = validate_add_todo(todo_path, todo_name, todo_file_name)
 
@@ -395,8 +393,6 @@ class DialogForAddTodo(CustomizeSimpleDialog):
 class DialogForUpdateTodo(CustomizeSimpleDialog):
     def __init__(self, master, todo: Todo) -> None:
         self.todo: Todo = todo
-        self.rule_file = configparser.ConfigParser()
-        self.rule_file.read("./config.ini", "UTF-8")
 
         super().__init__(master)
 
@@ -450,9 +446,9 @@ class DialogForUpdateTodo(CustomizeSimpleDialog):
         -------
         None
         """
-        todo_file_name: str = "".join([self.rule_file["string_when_add_todo"]["head"],
+        todo_file_name: str = "".join([config.rule_file["string_when_add_todo"]["head"],
                                        self.todo_name.get(),
-                                       self.rule_file["string_when_add_todo"]["tail"]])
+                                       config.rule_file["string_when_add_todo"]["tail"]])
 
         os.rename(self.todo.path, os.path.join(os.path.dirname(self.todo.path), todo_file_name))
 
@@ -464,9 +460,9 @@ class DialogForUpdateTodo(CustomizeSimpleDialog):
         -------
         is_validate: bool
         """
-        todo_file_name: str = "".join([self.rule_file["string_when_add_todo"]["head"],
+        todo_file_name: str = "".join([config.rule_file["string_when_add_todo"]["head"],
                                        self.todo_name.get(),
-                                       self.rule_file["string_when_add_todo"]["tail"]])
+                                       config.rule_file["string_when_add_todo"]["tail"]])
 
         is_validate, error_msg = validate_update_todo(self.todo.path, self.todo_name.get(), todo_file_name)
 
