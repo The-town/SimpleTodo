@@ -214,7 +214,8 @@ class ControlTodo:
                       os.path.dirname(todo_path), os.path.basename(todo_path).replace("todo", "完了"))
                   )
 
-    def get_content_todo_for_display_list(self, todo: Todo) -> str:
+    @staticmethod
+    def get_content_todo_for_display_list(todo: Todo) -> str:
         """
         todoをリスト表示する際に使用する文字列を取得するメソッド
 
@@ -232,7 +233,7 @@ class ControlTodo:
         for key in todo.metadata.keys():
             metadata = " ".join([metadata, ":".join([config.rule_file["Meta_data"][key], todo.metadata[key]])])
 
-        return " ".join([re.sub(r"\[.*\]", "", todo.name), metadata])
+        return " ".join([re.sub(r"\[.*]", "", todo.name), metadata])
 
     @staticmethod
     def save_todo(todo: Todo):
