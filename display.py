@@ -186,7 +186,6 @@ class TodoDetailDisplay:
         start_line: str = "1.0"
         end_line: str = "end"
         self.todo.detail = self.detail_text.get(start_line, end_line)[:-1]  # getをした際に、改行文字列が入るため除去
-        print(len(self.todo.detail.split("\n")))
         self.control_todo.save_todo(self.todo)
 
 
