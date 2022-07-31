@@ -6,7 +6,7 @@
 
 **Simple Todo** is todo application using text file.
 
-![todo_public_ver_1](./doc_img/todo_public_ver_1.jpg)
+![todo_public_ver_1](./doc_img/todo_public_ver_1.png)
 
 ## Usage
 
@@ -73,11 +73,11 @@ python=*.py
 #
 # "default" will use when not specified string.
 #
-# Color specify string such as white or red, yellow.
+# Color specify string such as white or red, yellow or HEX.
 default=white
 A=red
-B=yellow
-C=green
+B=#edea99
+C=#37bc87
 
 [Meta_data]
 # Metadata index and key.
