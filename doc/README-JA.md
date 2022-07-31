@@ -7,7 +7,7 @@
 
 
 
-![todo_public_ver_1](../doc_img/todo_public_ver_1.jpg)
+![todo_public_ver_1](../doc_img/todo_public_ver_1.png)
 
 
 
@@ -79,11 +79,11 @@ python=*.py
 [Importance_color]
 #重要度を表すためにファイル名で使用する文字列と対応する色
 #defaultは重要度の文字列が入っていないファイルに対して使用される色です。
-#色はredやblueなどの文字列で指定します。
+#色はredやblueなどの文字列、または16進数（HEX）で表記します。
 default=white
 A=red
-B=yellow
-C=green
+B=#edea99
+C=#37bc87
 
 [Meta_data]
 #メタデータとして使用するファイル内の文字列の位置とメタデータのキー名
