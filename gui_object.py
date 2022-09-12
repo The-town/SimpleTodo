@@ -105,6 +105,7 @@ class TextForDisplayDetail(Text):
 
         self.tag_config('system_message_file_path', background="white", foreground="blue", underline=1)
         self.tag_config('system_message_folder_path', background="white", foreground="blue", underline=1)
+        self.tag_config('url', background="white", foreground="blue", underline=1)
 
 
 class Listbox(tk.Listbox):

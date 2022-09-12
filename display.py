@@ -1,3 +1,4 @@
+import webbrowser
 from tkinter import *
 import tkinter as tk
 from typing import List
@@ -145,9 +146,11 @@ class TodoDetailDisplay:
         self.detail_text.pack(side="top", fill="both", expand=True)
         self.metadata_text.pack(side="bottom", fill="both", expand=True)
 
+        self.detail_text.tag_bind("url", "<Double-Button-1>", self.open_url)
+
     def display_todo_detail(self) -> None:
         self.detail_text.delete(1.0, END)
-        self.detail_text.insert(1.0, self.todo.detail)
+        self.insert_detail_text()
 
         self.metadata_text["state"] = "normal"
         self.metadata_text.delete(1.0, END)
@@ -164,6 +167,23 @@ class TodoDetailDisplay:
 
         self.detail_text.edit_reset()
         self.metadata_text.edit_reset()  # 上記で挿入している文字列をundoで消去しないように、undo stackをリセットする
+
+    def insert_detail_text(self) -> None:
+        """
+        TODO詳細内容をテキストへ挿入するメソッド
+
+        Returns
+        -------
+        None
+        """
+        lines_with_url: tuple = self.get_lines_url()
+
+        detail_text_list: list = self.todo.detail.split("\n")
+        for line, detail_text in enumerate(detail_text_list):
+            if line in lines_with_url:
+                self.detail_text.insert(END, detail_text + "\n", "url")
+            else:
+                self.detail_text.insert(END, detail_text + "\n")
 
     def open_with_another_app(self, event=None):
         os.system("start " + self.todo.path)
@@ -187,6 +207,38 @@ class TodoDetailDisplay:
         end_line: str = "end"
         self.todo.detail = self.detail_text.get(start_line, end_line)[:-1]  # getをした際に、改行文字列が入るため除去
         self.control_todo.save_todo(self.todo)
+
+    def get_lines_url(self) -> tuple:
+        """
+        URLが記載されている行数を返すメソッド
+
+        Returns
+        --------
+        lines_with_url: tuple
+            urlが書かれている行数
+        """
+        detail_text_list: list = self.todo.detail.split("\n")
+        lines_with_url: list = []
+        for line, detail_text in enumerate(detail_text_list):
+            if re.search(r"^https?://", detail_text):
+                lines_with_url.append(line)
+
+        return tuple(lines_with_url)
+
+    def open_url(self, event=None) -> None:
+        """
+        URLをブラウザで開くメソッド
+
+        Parameters
+        -----------
+        event:
+
+        Returns
+        --------
+        None
+        """
+        url: str = self.detail_text.get('insert linestart', 'insert lineend')
+        webbrowser.open_new_tab(url)
 
 
 if __name__ == "__main__":
