@@ -17,6 +17,5 @@ class TestTodoDetailDisplay(unittest.TestCase):
         self.assertEqual(self.detail.get_lines_url(), ())
 
 
-
 if __name__ == '__main__':
     unittest.main()
