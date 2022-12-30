@@ -113,11 +113,25 @@ class Todo:
 
 
 class ControlTodo:
+    """
+    TODOを管理するためのクラス
+
+    Attributes
+    -----------
+    dir_names_items: dict
+    dir_name_keys: list
+        TODOファイルがないか探索するディレクトリ名
+    dir_paths: list
+        TODOファイルがないか探索するディレクトリのパス名
+    patterns: list
+        TODOファイルの名前パターン
+    """
+
     def __init__(self):
 
         self.dir_names_items: dict = dict(config.rule_file["Dir_names"].items())
         self.dir_name_keys = list(config.rule_file["Dir_names"].keys())
-        self.dir_names = [config.rule_file["Dir_names"][key] for key in config.rule_file["Dir_names"].keys()]
+        self.dir_paths = [config.rule_file["Dir_names"][key] for key in config.rule_file["Dir_names"].keys()]
         self.patterns = [config.rule_file["File_names"][key] for key in config.rule_file["File_names"].keys()]
 
     def get_paths_which_result_of_search(self, directory_name):
@@ -136,8 +150,8 @@ class ControlTodo:
             Todoオブジェクトのリスト
         """
         todos: List[Todo] = []
-        for dir_name in self.dir_names:
-            todos.extend([Todo(path) for path in get_all_files(dir_name, ";".join(self.patterns))])
+        for dir_path in self.dir_paths:
+            todos.extend([Todo(path) for path in get_all_files(dir_path, ";".join(self.patterns))])
         return todos
 
     def limit_search_file(self, dir_name_key):
