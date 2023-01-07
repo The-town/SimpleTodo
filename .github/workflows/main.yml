@@ -30,7 +30,7 @@ jobs:
       - name: Upload
         uses: actions/checkout@v3
         with:
-          name: display.exe
+          name: path
           path: dist/display.exe
 
 
