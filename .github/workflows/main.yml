@@ -31,6 +31,6 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: display.exe
-          path: dist/display.exe
+          path: dist/display
 
 
