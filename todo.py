@@ -266,6 +266,9 @@ class ControlTodo:
         for key in todo.metadata.keys():
             metadata = " ".join([metadata, ":".join([config.rule_file["Meta_data"][key], todo.metadata[key]])])
 
+        if todo.delta == "":
+            return " ".join([re.sub(r"\[.*]", "", todo.name), metadata])
+
         limit_info: str = "期限まで"+todo.delta+"日"
         return " ".join([limit_info, re.sub(r"\[.*]", "", todo.name), metadata])
 
