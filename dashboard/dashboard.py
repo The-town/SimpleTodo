@@ -1,4 +1,5 @@
 from typing import List, Tuple, Dict
+from todo import ControlTodo
 
 import abc
 import tkinter
@@ -35,13 +36,10 @@ class CounterForActiveTodo(ICounterForTodo):
     """
     ダッシュボード上でアクティブなTODO数を表示する
     """
-    def __init__(self, dashboard_root: DashboardRootWindow, name: str, todos: tuple):
+    def __init__(self, dashboard_root: DashboardRootWindow, name: str):
         self.dashboard_root: DashboardRootWindow = dashboard_root
         self.counter_var: tkinter.StringVar = tkinter.StringVar(master=self.dashboard_root.root)
-        self.todos: tuple = todos
         self.name: str = name
-
-        self.display()
 
     def get_todo_state(self) -> tuple:
         """
@@ -51,7 +49,11 @@ class CounterForActiveTodo(ICounterForTodo):
         --------
         todos: tuple
         """
-        return self.todos
+
+        control_todo: ControlTodo = ControlTodo()
+        todos = tuple(control_todo.search_file())
+
+        return todos
 
     def sum_number_of_todo(self) -> int:
         """
@@ -121,6 +123,12 @@ class DashBoard:
 
     def add_counter(self, name: str, counter: ICounterForTodo):
         self.counters[name] = counter
+
+    def update_counter(self):
+        for counter in self.counters.values():
+            counter.display()
+
+        self.root.after(1000, self.update_counter)
 
     @staticmethod
     def create_counter_for_active_todo(counter: ICounterForTodo, column: int, row: int):
