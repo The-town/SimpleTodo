@@ -34,6 +34,8 @@ class Todo:
         self.set_todo_timestamp()
         self.get_todo_detail()
 
+        self.delta: str = self.get_delta_today_and_limit_date()
+
     def set_name_from_path(self) -> None:
         """
         パスからtodo名を抽出して設定するメソッド
@@ -110,6 +112,23 @@ class Todo:
                 self.detail = f.read()
         except UnicodeDecodeError:
             self.detail = "このファイルはプレビューできません。"
+
+    def get_delta_today_and_limit_date(self) -> str:
+        """
+        期限日と今日の差を設定するメソッド
+
+        Returns
+        --------
+        str(delta.days): str
+            期限日と今日の差分
+        """
+        if "limit" not in self.metadata.keys():
+            return ""
+
+        limit_date: datetime.datetime = datetime.datetime.strptime(self.metadata["limit"][1:], "%Y-%m-%d")
+        delta: datetime.timedelta = limit_date - datetime.datetime.now()
+
+        return str(delta.days)
 
 
 class ControlTodo:
@@ -247,7 +266,8 @@ class ControlTodo:
         for key in todo.metadata.keys():
             metadata = " ".join([metadata, ":".join([config.rule_file["Meta_data"][key], todo.metadata[key]])])
 
-        return " ".join([re.sub(r"\[.*]", "", todo.name), metadata])
+        limit_info: str = "期限まで"+todo.delta+"日"
+        return " ".join([limit_info, re.sub(r"\[.*]", "", todo.name), metadata])
 
     @staticmethod
     def save_todo(todo: Todo):
