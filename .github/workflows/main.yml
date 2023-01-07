@@ -26,11 +26,11 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Run PyInstaller
         run: |
-          pyinstaller display.py --onefile --noconsole
+          pyinstaller display.py --onefile --noconsole --name todo.exe
       - name: Upload
         uses: actions/checkout@v3
         with:
           name: path
-          path: dist/display.exe
+          path: dist/todo.exe
 
 
