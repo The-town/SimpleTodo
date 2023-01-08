@@ -126,7 +126,11 @@ class Todo:
             return ""
 
         limit_date: datetime.datetime = datetime.datetime.strptime(self.metadata["limit"][1:], "%Y-%m-%d")
-        delta: datetime.timedelta = limit_date - datetime.datetime.now()
+
+        now_year: int = datetime.datetime.now().year
+        now_month: int = datetime.datetime.now().month
+        now_day: int = datetime.datetime.now().day
+        delta: datetime.timedelta = limit_date - datetime.datetime(now_year, now_month, now_day)
 
         return str(delta.days)
 

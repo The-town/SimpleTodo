@@ -21,10 +21,15 @@ class TestTodo(unittest.TestCase):
             self.todos.append(Todo(name))
 
     def test_get_delta_today_and_limit_date(self) -> None:
+        now_year: int = datetime.datetime.now().year
+        now_month: int = datetime.datetime.now().month
+        now_day: int = datetime.datetime.now().day
+        now: datetime.datetime = datetime.datetime(now_year, now_month, now_day)
+
         for todo in self.todos:
             todo_delta: str = todo.get_delta_today_and_limit_date()
             delta: datetime.timedelta = \
-                datetime.datetime.strptime(os.path.basename(todo.path), self.format) - datetime.datetime.now()
+                datetime.datetime.strptime(os.path.basename(todo.path), self.format) - now
 
             self.assertEqual(todo_delta, str(delta.days))
 
