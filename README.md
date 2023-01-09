@@ -4,18 +4,18 @@
 
 ## Overview
 
-**Simple Todo** is todo application using text file.
+**Simple Todo** is a to-do application using a text file.
 
 ![todo_public_ver_1](./doc_img/todo_public_ver_1.png)
 
 ## Usage
 
-1. You register folder which **Simple Todo** search.
+1. You register a folder that **Simple Todo** searches.
 2. Put the string **[todo]** at the beginning of the file name in the folder.
 3. If the file name contains the string **[todo]**, **Simple Todo** will display the 
-file in the list screen.
-   If the file is a text file, it will be displayed in the detail screen.
-   
+   file in the list screen.
+   If the file is a text file, it will be displayed on the detail screen.
+
 _The string you use does not have to be **[todo]**._  
 _You can specify any string in the configuration file._
 
@@ -28,7 +28,7 @@ Even if you don't use **Simple Todo** anymore, todo will remain.
 
 ### Simple
 
-Compare other todo application, **Simple Todo** is very simple. 
+Compare to other todo applications, **Simple Todo** is very simple. 
 
 * Add todo
 * Display todo list
@@ -41,21 +41,19 @@ Compare other todo application, **Simple Todo** is very simple.
 
 ### Configuration
 
-Configuration file is **config.ini**.
-Format is following.
-
-TODO Japanese to English
+The Configuration file is **config.ini**.
+The format is the following.
 
 ```ini
 [Dir_names]
 # name=path
-# "name" is displayed name in select folder which right click.
+# "name" is displayed in a select folder that right-clicks.
 # example
 # F:\Document\example
 example=F:\Document\example
 
 [File_names]
-# String which this application search for display file to list screen.
+# String which this application searches for display files to list screen.
 # Can use wildcard (*).
 
 # example
@@ -66,14 +64,14 @@ todo=todo*
 python=*.py
 
 [Importance_color]
-# "A" adn "B", "C" express importance.
+# "A" and "B", "C" express importance.
 # A > B > C
-# These string contain file name.
+# These strings contain a file name.
 # [todo][A]example.txt
 #
 # "default" will use when not specified string.
 #
-# Color specify string such as white or red, yellow or HEX.
+# Color specifies string such as white or red, yellow or HEX.
 default=white
 A=red
 B=#edea99
@@ -89,18 +87,15 @@ limit=limit
 category=category
 ```
 
-**config.ini**を編集する際の注意点になります。
+**Note: when editing config.ini**
 
-- **Dir_names**には複数のフォルダ名を記載できます。
-- **File_names**には複数のファイル名を記載できます。
-- ファイル名を記載する場合はワイルドカード（*）を使用できます。
-- ファイル名を複数記載した場合は**or**の検索になります。
-- **Importance_color**で指定した色にする場合は、ファイル名に **[文字列]** を加えます（例： **A=red** とした場合は、 **[A]hogehoge** というファイル名にする）。
+- You specify folder names to **Dir_names**.
+- You specify file names to **File_names.**
+- You can add **File_names** with the wild card "*".
+- When multi names on File_names, will be a search for "OR".
+- When specified **Importtance_color**, you add strings to the file name.
+  - For Example, A=red file, names=[A]hogehoge.txt
 
-**※1  記載したフォルダ名配下に大量のフォルダ、ファイルがある場合、検索するのに時間がかかる場合があります。**
- **極端な話ですがフォルダ名にC:\と記載すると、TODOリストを表示するまでにかなりの時間を要します。**
-
-**※2  TODOファイルの文字コードはUTF-8にしてください。詳細画面が表示されません。**
 
 ### How to Run
 
