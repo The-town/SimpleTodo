@@ -36,6 +36,9 @@ class Todo:
 
         self.delta: str = self.get_delta_today_and_limit_date()
 
+    def __eq__(self, other):
+        return self.name == other.name
+
     def set_name_from_path(self) -> None:
         """
         パスからtodo名を抽出して設定するメソッド
@@ -193,6 +196,23 @@ class ControlTodo:
         """
         todos: List[Todo] = [Todo(path) for path in
                              get_all_files(config.rule_file["Dir_names"][dir_name_key], ";".join(self.patterns))]
+        return todos
+
+    def search_file_until_spec_date(self, days: int) -> List:
+        """
+        指定された日までのTODOファイルを取得する関数
+
+        Parameters
+        -----------
+        days: int
+
+        Returns
+        --------
+        todos: List[Todo]
+            Todoオブジェクトのリスト
+        """
+        todos_set_due_date: List[Todo, ...] = [todo for todo in self.search_file() if todo.delta != ""]
+        todos: List[Todo, ...] = [todo for todo in todos_set_due_date if int(todo.delta) < days]
         return todos
 
     def sort_todo(self, todos: List[Todo], method: str):

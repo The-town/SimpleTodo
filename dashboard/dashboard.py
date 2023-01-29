@@ -32,6 +32,70 @@ class ICounterForTodo(metaclass=abc.ABCMeta):
         raise NotImplementedError()
 
 
+class CounterForLimitWeekTodo(ICounterForTodo):
+    """
+    1週間後が期限のTODO数を表示するカウンター
+    """
+    def __init__(self, dashboard_root: DashboardRootWindow, name: str):
+        self.dashboard_root: DashboardRootWindow = dashboard_root
+        self.counter_var: tkinter.StringVar = tkinter.StringVar(master=self.dashboard_root.root)
+        self.name: str = name
+
+    def get_todo_state(self) -> tuple:
+        """
+        今週期限のTODOを取得するメソッド
+
+        Returns
+        --------
+        todos: tuple
+        """
+        control_todo: ControlTodo = ControlTodo()
+        todos = tuple(control_todo.search_file_until_spec_date(7))
+
+        return todos
+
+    def sum_number_of_todo(self) -> int:
+        """
+        TODOの数を合計するメソッド
+
+        Returns
+        --------
+        number_of_active: int
+        """
+        todos: tuple = self.get_todo_state()
+        number_of_active: int = len(todos)
+        return number_of_active
+
+    def display(self) -> None:
+        """
+        TODO数を表示するメソッド
+
+        Returns
+        --------
+        None
+        """
+        number_of_active: int = self.sum_number_of_todo()
+        self.counter_var.set(": ".join([self.name, str(number_of_active)]))
+
+    def create_label(self) -> tkinter.Label:
+        """
+        ダッシュボード用にラベルを作るメソッド
+
+        Returns
+        -------
+        counter_label: tkinter.Label
+        """
+        counter_label: ttk.Label = ttk.Label(self.dashboard_root.root)
+        counter_label["padding"] = "1c"
+        counter_label["font"] = ("メイリオ", 26)
+        counter_label["background"] = "blue"
+        counter_label["foreground"] = "white"
+        counter_label["relief"] = "groove"
+        counter_label["textvariable"] = self.counter_var
+
+        return counter_label
+
+
 class CounterForActiveTodo(ICounterForTodo):
     """
     ダッシュボード上でアクティブなTODO数を表示する
