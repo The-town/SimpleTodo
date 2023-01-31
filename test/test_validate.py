@@ -60,10 +60,10 @@ class TestValidate(unittest.TestCase):
         self.assertEqual(error_msg, "")
 
     def test_validate_double_todo_name_False(self):
-        is_validate, error_msg = validate_double_todo_name("test_todo", os.getcwd())
+        is_validate, error_msg = validate_double_todo_name("[todo][B][#][#test]test_todo.txt", os.getcwd())
 
         self.assertFalse(is_validate)
-        self.assertEqual(error_msg, "test_todoは既存のTODO名と重複しています。")
+        self.assertEqual(error_msg, "[todo][B][#][#test]test_todo.txtは既存のTODO名と重複しています。")
 
 
 if __name__ == '__main__':
