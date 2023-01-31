@@ -76,12 +76,14 @@ def validate_todo_name(todo_name: str) -> Tuple[bool, str]:
     Bool: bool, error_msg: str
         バリデーションチェックに成功したかどうか、および失敗時のエラーメッセージ
     """
-    not_use_strings: list = ["/", ".", "\\", "　"]
+    not_use_strings: list = ["/", ".", "\\", "　", " "]
 
     for not_use_string in not_use_strings:
         if not_use_string in set(todo_name):
             if not_use_string == "　":
                 return False, f"全角スペースは名前に使えません。"
+            if not_use_string == " ":
+                return False, "半角スペースは名前に使えません。"
             return False, f"{not_use_string}は名前に使えません。"
     return True, ""
 

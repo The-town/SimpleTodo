@@ -46,6 +46,13 @@ class TestValidate(unittest.TestCase):
         self.assertFalse(is_validate)
         self.assertEqual(error_msg, "全角スペースは名前に使えません。")
 
+    def test_validate_todo_name_in_half_width_space(self):
+        todo_name: str = "tes t1_(@)#"
+        is_validate, error_msg = validate_todo_name(todo_name)
+
+        self.assertFalse(is_validate)
+        self.assertEqual(error_msg, "半角スペースは名前に使えません。")
+
     def test_validate_double_todo_name_True(self):
         is_validate, error_msg = validate_double_todo_name("test_tod", os.getcwd())
 
