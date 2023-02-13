@@ -31,8 +31,19 @@ class TodoDisplay:
         self.todo_display_list: TodoListDisplay = TodoListDisplay(master=self.todo_frame, control_todo=self.control_todo)
         self.todo_display_list.display_todo_list(self.dir_name_var.get())
 
-    def refresh(self, event=None):
-        self.todo_display_list.display_todo_list(self.dir_name_var.get())
+    def refresh(self, event=None, index_todo_list: int = 0):
+        self.todo_display_list.todo_listbox.activate(index_todo_list)
+        self.todo_display_list.display_todo_list(self.dir_name_var.get(), activate_index=index_todo_list)
+
+    def auto_refresh(self) -> None:
+        """
+        TODOのリストを定期的に更新するメソッド
+        """
+        if len(self.todo_display_list.todo_listbox.curselection()) > 0:
+            index: int = self.todo_display_list.todo_listbox.curselection()[0]
+            self.refresh(index_todo_list=index)
+            print("refresh")
+        self.root.after(10000, self.auto_refresh)
 
     def sort_todo_with_limit(self, event=None):
         self.todo_display_list.display_todo_list(self.dir_name_var.get(), "期限")
@@ -96,7 +107,21 @@ class TodoListDisplay:
 
         self.todo_detail: TodoDetailDisplay = TodoDetailDisplay(master=self.master)
 
-    def display_todo_list(self, todo_directory: str, sort_method: str = "期限") -> None:
+    def display_todo_list(self, todo_directory: str, sort_method: str = "期限", activate_index: int = 0) -> None:
+        """
+        TODOのリストを表示するメソッド
+
+        Parameters
+        ----------
+        todo_directory: str
+        sort_method: str
+        activate_index: int
+            デフォルトでアクティブ（選択状態）にするリストのインデックス
+
+        Returns
+        --------
+        None
+        """
         self.todo_listbox.delete(0, END)
 
         todo_list_box_id = 0
@@ -108,6 +133,9 @@ class TodoListDisplay:
             self.todo_listbox.itemconfig(todo_list_box_id, {'bg': todo.importance_color})
             self.todo_list_box_dict[todo_list_box_id] = todo
             todo_list_box_id = todo_list_box_id + 1
+
+        self.todo_listbox.activate(activate_index)
+        self.todo_listbox.selection_set(activate_index, last=None)
 
     def display_todo_detail(self, event=None) -> None:
         if str(event.type) == "ButtonPress":
@@ -243,5 +271,6 @@ class TodoDetailDisplay:
 
 if __name__ == "__main__":
     todo_display = TodoDisplay()
+    todo_display.auto_refresh()
     todo_display.root.mainloop()
 
