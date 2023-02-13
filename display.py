@@ -39,10 +39,10 @@ class TodoDisplay:
         """
         TODOのリストを定期的に更新するメソッド
         """
+        index: int = 0
         if len(self.todo_display_list.todo_listbox.curselection()) > 0:
             index: int = self.todo_display_list.todo_listbox.curselection()[0]
-            self.refresh(index_todo_list=index)
-            print("refresh")
+        self.refresh(index_todo_list=index)
         self.root.after(10000, self.auto_refresh)
 
     def sort_todo_with_limit(self, event=None):
