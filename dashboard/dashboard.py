@@ -4,11 +4,17 @@ from todo import ControlTodo
 import abc
 import tkinter
 import tkinter.ttk as ttk
+import customtkinter
+
+customtkinter.set_appearance_mode("System")  # Modes: system (default), light, dar
+customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
 
 
 class DashboardRootWindow:
     def __init__(self):
-        self.root = tkinter.Tk()
+        self.root = customtkinter.CTk()
+        self.root.geometry("600x600")
+        self.root.configure(fg_color="#B4656F")
 
 
 class ICounterForTodo(metaclass=abc.ABCMeta):
@@ -28,7 +34,7 @@ class ICounterForTodo(metaclass=abc.ABCMeta):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def create_label(self) -> tkinter.Label:
+    def create_label(self) -> customtkinter.CTkLabel:
         raise NotImplementedError()
 
 
@@ -77,21 +83,24 @@ class CounterForLimitWeekTodo(ICounterForTodo):
         number_of_active: int = self.sum_number_of_todo()
         self.counter_var.set(": ".join([self.name, str(number_of_active)]))
 
-    def create_label(self) -> tkinter.Label:
+    def create_label(self) -> customtkinter.CTkLabel:
         """
         ダッシュボード用にラベルを作るメソッド
 
         Returns
         -------
-        counter_label: tkinter.Label
+        counter_label: customtkinter.CtkLabel
         """
-        counter_label: ttk.Label = ttk.Label(self.dashboard_root.root)
-        counter_label["padding"] = "1c"
-        counter_label["font"] = ("メイリオ", 26)
-        counter_label["background"] = "blue"
-        counter_label["foreground"] = "white"
-        counter_label["relief"] = "groove"
-        counter_label["textvariable"] = self.counter_var
+        counter_label: customtkinter.CTkLabel = customtkinter.CTkLabel(
+            self.dashboard_root.root,
+            font=("メイリオ", 26),
+            fg_color=("#B5CBB7", "gray"),
+            text_color="black",
+            textvariable=self.counter_var,
+            height=300,
+            width=300,
+            wraplength=250
+        )
 
         return counter_label
 
@@ -142,22 +151,24 @@ class CounterForActiveTodo(ICounterForTodo):
         number_of_active: int = self.sum_number_of_todo()
         self.counter_var.set(": ".join([self.name, str(number_of_active)]))
 
-    def create_label(self) -> tkinter.Label:
+    def create_label(self) -> customtkinter.CTkLabel:
         """
         ダッシュボード用にラベルを作るメソッド
 
         Returns
         -------
-        counter_label: tkinter.Label
+        counter_label: customtkinter.CTkLabel
         """
-        counter_label: ttk.Label = ttk.Label(self.dashboard_root.root)
-        counter_label["padding"] = "1c"
-        counter_label["font"] = ("メイリオ", 26)
-        counter_label["background"] = "green"
-        counter_label["foreground"] = "white"
-        counter_label["relief"] = "groove"
-        counter_label["textvariable"] = self.counter_var
-
+        counter_label: customtkinter.CTkLabel = customtkinter.CTkLabel(
+            self.dashboard_root.root,
+            font=("メイリオ", 26),
+            fg_color=("#464E47", "gray"),
+            text_color="white",
+            textvariable=self.counter_var,
+            height=300,
+            width=300,
+            wraplength=250
+        )
         return counter_label
 
 
@@ -167,7 +178,7 @@ class DashBoard:
     """
     def __init__(self, dashboard_root: DashboardRootWindow, name="ダッシュボード") -> None:
         super().__init__()
-        self.root: tkinter.Tk = dashboard_root.root
+        self.root: customtkinter.CTk = dashboard_root.root
         self.root.title(name)
 
         self.counters: Dict[str: ICounterForTodo, ...] = {}
@@ -196,6 +207,6 @@ class DashBoard:
 
     @staticmethod
     def create_counter_for_active_todo(counter: ICounterForTodo, column: int, row: int):
-        counter_label: tkinter.Label = counter.create_label()
+        counter_label: customtkinter.CTkLabel = counter.create_label()
         counter_label.grid(column=column, row=row)
 
