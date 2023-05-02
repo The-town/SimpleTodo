@@ -286,15 +286,11 @@ class ControlTodo:
         " ".join([todo.name, metadata]): str
             表示する文字列
         """
-        metadata: str = ""
-        for key in todo.metadata.keys():
-            metadata = " ".join([metadata, ":".join([config.rule_file["Meta_data"][key], todo.metadata[key]])])
-
         if todo.delta == "":
-            return " ".join([re.sub(r"\[.*]", "", todo.name), metadata])
+            return re.sub(r"\[.*]", "", todo.name)
 
         limit_info: str = "期限まで"+todo.delta+"日"
-        return " ".join([limit_info, re.sub(r"\[.*]", "", todo.name), metadata])
+        return " ".join([limit_info, re.sub(r"\[.*]", "", todo.name)])
 
     @staticmethod
     def save_todo(todo: Todo):
