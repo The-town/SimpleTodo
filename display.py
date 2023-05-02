@@ -43,7 +43,8 @@ class TodoDisplay:
         if len(self.todo_display_list.todo_listbox.curselection()) > 0:
             index: int = self.todo_display_list.todo_listbox.curselection()[0]
         self.refresh(index_todo_list=index)
-        self.root.after(10000, self.auto_refresh)
+        refresh_interval: int = 60 * 60 * 1000  # 1時間
+        self.root.after(refresh_interval, self.auto_refresh)
 
     def sort_todo_with_limit(self, event=None):
         self.todo_display_list.display_todo_list(self.dir_name_var.get(), "期限")
