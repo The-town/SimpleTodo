@@ -7,3 +7,7 @@ pyinstaller-hooks-contrib==2022.1
 pywin32-ctypes==0.2.0
 typing_extensions==4.1.1
 zipp==3.7.0
+
+pyzmail36
+IMAPClient~=2.3.1
+customtkinter~=5.1.2

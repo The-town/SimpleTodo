@@ -1,10 +1,14 @@
 from typing import Tuple, List
 
+
 from operate_file_1 import get_all_files
 import config
+from mail import Imap
 import re
 import os
 import datetime
+import uuid
+import hashlib
 
 
 class Todo:
@@ -137,6 +141,92 @@ class Todo:
 
         return str(delta.days)
 
+
+class TodoFromMail:
+    """
+    メールから追加されたTODOを表すクラス
+    """
+    def __init__(self):
+        self.imap = Imap()
+        self.content_of_messages = ()
+
+    def set_content_of_messages(self):
+        self.imap.login()
+        self.content_of_messages = self.imap.get_content_of_messages()
+
+    def create_todo_files(self) -> None:
+        """
+        TODOファイルを作成するメソッド
+
+        Returns
+        -------
+        None
+        """
+        hash_list = []
+        if os.path.isfile("./mail_hash_list.log"):
+            with open("./mail_hash_list.log", "r", encoding="utf-8") as f:
+                hash_list = f.read().split("\n")
+
+        contents: tuple = self.create_todo_contents()
+        for content in contents:
+            if self.create_hash_from_mail_body(content["body"]) in hash_list:
+                continue
+
+            file_path = os.path.join(config.rule_file["AddTodoFromMail"]["dir_path"], content["title"])
+            with open(file_path, "w", encoding="utf-8") as f:
+                f.write(content["body"])
+
+            self.update_add_hash_list(content["body"])
+
+    def create_todo_contents(self) -> tuple:
+        """
+        TODOファイルの中身を作成するメソッド
+
+        Returns
+        -------
+        contents: tuple
+        """
+        contents = []
+        for content_of_message in self.content_of_messages:
+            content = {
+                "title": f"[todo][C]{content_of_message['subject']}_{str(uuid.uuid4())}.txt",
+                "body": f"{content_of_message['body']}"
+            }
+            contents.append(content)
+
+        return tuple(contents)
+
+    @staticmethod
+    def create_hash_from_mail_body(body: str) -> str:
+        """
+        メールを識別するためにbodyからハッシュ値を生成するメソッド
+        Parameters
+        ----------
+        body : str
+
+        Returns
+        -------
+        sha256.hexdigest(): str
+        """
+        sha256 = hashlib.sha256()
+        sha256.update(body.encode())
+        return sha256.hexdigest()
+
+    def update_add_hash_list(self, body: str):
+        """
+        同じメールを登録しないように、メールのbodyから取得したハッシュ値を記録するメソッド
+
+        Parameters
+        ----------
+        body : str
+
+        Returns
+        -------
+        None
+        """
+        with open("./mail_hash_list.log", "a", encoding="utf-8") as f:
+            f.write(self.create_hash_from_mail_body(body))
+            f.write("\n")
 
 class ControlTodo:
     """

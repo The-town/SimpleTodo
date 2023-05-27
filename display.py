@@ -3,7 +3,7 @@ from tkinter import *
 import tkinter as tk
 from typing import List
 
-from todo import ControlTodo, Todo
+from todo import ControlTodo, Todo, TodoFromMail
 from gui_object import Frame, Listbox, TextForDisplayDetail, DialogForAddTodo, \
     DialogConfirmForCloseTodo, DialogForUpdateTodo, RightClickMenu
 import os
@@ -27,6 +27,7 @@ class TodoDisplay:
         self.right_click_menu.set_value_for_select_dir_menu(self.dir_name_var, self.control_todo, self.refresh)
         self.right_click_menu.set_value_for_control_todo_menu(self.update_todo, self.add_todo, self.close_todo)
         self.right_click_menu.set_value_for_select_sort_menu(self.sort_todo_with_limit, self.sort_todo_with_importance)
+        self.right_click_menu.set_value_for_add_todo_from_mail(self.add_todo_from_mail)
 
         self.todo_display_list: TodoListDisplay = TodoListDisplay(master=self.todo_frame, control_todo=self.control_todo)
         self.todo_display_list.display_todo_list(self.dir_name_var.get())
@@ -66,6 +67,23 @@ class TodoDisplay:
         """
         dir_names_items: dict = self.control_todo.dir_names_items
         DialogForAddTodo(self.root, dir_names_items, self.dir_name_var.get())
+        self.refresh()
+
+    def add_todo_from_mail(self, event=None):
+        """
+        todoファイルをメールから追加する
+
+        Parameters
+        ----------
+        event :　None
+
+        Returns
+        -------
+        None
+        """
+        todo_from_mail = TodoFromMail()
+        todo_from_mail.set_content_of_messages()
+        todo_from_mail.create_todo_files()
         self.refresh()
 
     def update_todo(self, event=None) -> None:

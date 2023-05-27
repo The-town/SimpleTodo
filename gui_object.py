@@ -69,6 +69,10 @@ class RightClickMenu(tk.Menu):
 
         self.add_separator()
 
+    def set_value_for_add_todo_from_mail(self, add_todo_from_mail):
+        self.add("command", label="メールからTODOを追加する", command=add_todo_from_mail)
+        self.add_separator()
+
 
 class RefreshButton(Button):
     def __init__(self, master=None,):

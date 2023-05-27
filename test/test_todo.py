@@ -4,6 +4,7 @@ import unittest
 
 
 from todo import Todo
+from todo import TodoFromMail
 
 
 class TestTodo(unittest.TestCase):
@@ -36,3 +37,15 @@ class TestTodo(unittest.TestCase):
     def tearDown(self) -> None:
         for todo_name in self.todo_names:
             os.remove(todo_name)
+
+
+class TestTodoFromMail(unittest.TestCase):
+    def setUp(self) -> None:
+        self.todo_from_mail = TodoFromMail()
+
+    def test_create_todo(self):
+        self.todo_from_mail.content_of_messages = (
+            {"subject": "test", "body": "これはテストです。"},
+        )
+
+        self.todo_from_mail.create_todo_files()
