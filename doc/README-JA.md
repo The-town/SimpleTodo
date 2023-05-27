@@ -90,8 +90,19 @@ C=#37bc87
 #TODOファイルのファイル名のうち[#metadata]のように、[]で囲まれた#で始まる文字をメタデータとして認識します。
 # example: [#2020/09/01][#機能追加]example.txtとすれば期限:2020/09/01 カテゴリ:機能追加となります。
 #          [#][#機能追加]example.txtとすればカテゴリ:機能追加となります（#しかないため期限は無視される）。
-1=期限
-2=カテゴリ
+limit=limit
+category=category
+
+[Mail]
+# メール関連の設定
+imap_server=imap.example
+user=hogehoge
+password=password
+
+[AddTodoFromMail]
+# TODOファイルとして作成したい送信元メールアドレス
+address=hogehoge@example
+dir_path=F:\Document\todo\mail
 ```
 
 

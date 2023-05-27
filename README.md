@@ -85,6 +85,17 @@ C=#37bc87
 #          [#][#Add Function]example.txt -> category:Add Function
 limit=limit
 category=category
+
+[Mail]
+# メール関連の設定
+imap_server=imap.example
+user=hogehoge
+password=password
+
+[AddTodoFromMail]
+# TODOファイルとして作成したい送信元メールアドレス
+address=hogehoge@example
+dir_path=F:\Document\todo\mail
 ```
 
 **Note: when editing config.ini**
