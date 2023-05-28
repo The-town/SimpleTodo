@@ -267,6 +267,20 @@ class DialogConfirmForCloseTodo(CustomizeSimpleDialog):
         self.control_todo.close_todo(self.todo)
 
 
+class LabelInDialogForAddTodo:
+    """
+    todoを追加するダイアログ内で使用するラベル
+    """
+    def __init__(self, master, text="", column=0, row=0):
+        self.label = Label(master)
+        self.label: Label = Label(master)
+        self.label["text"] = text
+        self.label["width"] = 25
+        self.label["fg"] = "black"
+        self.label["bg"] = "white"
+        self.label.grid(column=column, row=row)
+
+
 class DialogForAddTodo(CustomizeSimpleDialog):
     def __init__(self, master, items_for_combobox: dict, combobox_value: str) -> None:
         self.items_for_combobox: dict = items_for_combobox
@@ -299,12 +313,7 @@ class DialogForAddTodo(CustomizeSimpleDialog):
         None
         """
 
-        description_combobox_label: Label = Label(master)
-        description_combobox_label["text"] = "カテゴリを選択"
-        description_combobox_label["width"] = 25
-        description_combobox_label["fg"] = "black"
-        description_combobox_label["bg"] = "white"
-        description_combobox_label.grid(column=0, row=0)
+        description_combobox_label: LabelInDialogForAddTodo = LabelInDialogForAddTodo(master, "カテゴリを選択", 0, 0)
 
         self.category: Combobox = Combobox(master)
         self.category["font"] = ("メイリオ", 11)
@@ -316,31 +325,20 @@ class DialogForAddTodo(CustomizeSimpleDialog):
             self.category.current(0)
         self.category.grid(column=1, row=0, sticky=W)
 
-        description_entry_label: Label = Label(master)
-        description_entry_label["text"] = "追加するTODO名を入力"
-        description_entry_label["width"] = 25
-        description_entry_label["fg"] = "black"
-        description_entry_label["bg"] = "white"
-        description_entry_label.grid(column=0, row=1)
+        description_entry_label: LabelInDialogForAddTodo = LabelInDialogForAddTodo(master, "追加するTODO名を入力", 0, 1)
 
         self.todo_name: Entry = Entry(master)
         self.todo_name.grid(column=1, row=1, sticky=W)
         self.todo_name["font"] = ("メイリオ", 11)
         self.todo_name["width"] = 30
 
-        todo_detail_label: Label = Label(master)
-        todo_detail_label["text"] = "TODOの詳細内容を入力"
-        todo_detail_label["width"] = 25
-        todo_detail_label["fg"] = "black"
-        todo_detail_label["bg"] = "white"
-        todo_detail_label.grid(column=0, row=2)
+        todo_detail_label: LabelInDialogForAddTodo = LabelInDialogForAddTodo(master, "TODOの詳細内容を入力", 0, 2)
 
         self.todo_detail_text: Text = Text(master)
         self.todo_detail_text["width"] = 30
         self.todo_detail_text["height"] = 5
         self.todo_detail_text["font"] = ("メイリオ", 11)
         self.todo_detail_text.grid(column=1, row=2, sticky=W)
-
 
         self.todo_name_check_message: Message = tk.Message(master)
         self.todo_name_check_message["aspect"] = 300
