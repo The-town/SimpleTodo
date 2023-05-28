@@ -281,6 +281,27 @@ class LabelInDialogForAddTodo:
         self.label.grid(column=column, row=row)
 
 
+class ComboboxInDialogForAddTodo:
+    """
+    todoを追加するダイアログ内で使用するコンボボックス
+    """
+    def __init__(self, master, items=None, current_item: str = ""):
+        if items is None:
+            items = {}
+
+        self.combobox: Combobox = Combobox(master)
+        self.combobox["font"] = ("メイリオ", 11)
+        self.combobox["value"] = list(items.keys())
+        self.combobox["width"] = 30
+        if current_item in list(items.keys()):
+            self.combobox.current(list(items.keys()).index(current_item))
+        else:
+            self.combobox.current(0)
+
+    def grid(self, column=0, row=0):
+        self.combobox.grid(column=column, row=row, sticky=W)
+
+
 class DialogForAddTodo(CustomizeSimpleDialog):
     def __init__(self, master, items_for_combobox: dict, combobox_value: str) -> None:
         self.items_for_combobox: dict = items_for_combobox
@@ -314,16 +335,10 @@ class DialogForAddTodo(CustomizeSimpleDialog):
         """
 
         description_combobox_label: LabelInDialogForAddTodo = LabelInDialogForAddTodo(master, "カテゴリを選択", 0, 0)
-
-        self.category: Combobox = Combobox(master)
-        self.category["font"] = ("メイリオ", 11)
-        self.category["value"] = list(self.items_for_combobox.keys())
-        self.category["width"] = 30
-        if self.current_combobox_value in list(self.items_for_combobox.keys()):
-            self.category.current(list(self.items_for_combobox.keys()).index(self.current_combobox_value))
-        else:
-            self.category.current(0)
-        self.category.grid(column=1, row=0, sticky=W)
+        category: ComboboxInDialogForAddTodo = ComboboxInDialogForAddTodo(
+            master, self.items_for_combobox, self.current_combobox_value
+        )
+        category.grid(column=1, row=0)
 
         description_entry_label: LabelInDialogForAddTodo = LabelInDialogForAddTodo(master, "追加するTODO名を入力", 0, 1)
 
