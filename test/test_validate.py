@@ -1,6 +1,6 @@
 import os
 import unittest
-from validate import validate_todo_name_empty, validate_todo_name, validate_double_todo_name
+from validate import validate_todo_name_empty, validate_todo_name, validate_double_todo_name, validate_todo_limit
 
 
 class TestValidate(unittest.TestCase):
@@ -64,6 +64,25 @@ class TestValidate(unittest.TestCase):
 
         self.assertFalse(is_validate)
         self.assertEqual(error_msg, "[todo][B][#][#test]test_todo.txtは既存のTODO名と重複しています。")
+
+    def test_validate_todo_limit_True(self):
+        is_validate, error_msg = validate_todo_limit("2023-01-01")
+
+        self.assertTrue(is_validate)
+        self.assertEqual(error_msg, "")
+
+    def test_validate_todo_limit_False(self):
+        is_validate, error_msg = validate_todo_limit("2023-01-")
+        self.assertFalse(is_validate)
+
+        is_validate, error_msg = validate_todo_limit("2023-01-100")
+        self.assertFalse(is_validate)
+
+        is_validate, error_msg = validate_todo_limit("2023-13-10")
+        self.assertFalse(is_validate)
+
+        is_validate, error_msg = validate_todo_limit("2023-13-a")
+        self.assertFalse(is_validate)
 
 
 if __name__ == '__main__':

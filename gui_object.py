@@ -271,14 +271,32 @@ class LabelInDialogForAddTodo:
     """
     todoを追加するダイアログ内で使用するラベル
     """
-    def __init__(self, master, text="", column=0, row=0):
+    def __init__(self, master, text=""):
         self.label = Label(master)
         self.label: Label = Label(master)
         self.label["text"] = text
         self.label["width"] = 25
         self.label["fg"] = "black"
         self.label["bg"] = "white"
+
+    def grid(self, column=0, row=0):
         self.label.grid(column=column, row=row)
+
+
+class EntryInDialogForAddTodo:
+    """
+    todoを追加するダイアログ内で使用するエントリーボックス
+    """
+    def __init__(self, master):
+        self.entry = Entry(master)
+        self.entry["font"] = ("メイリオ", 11)
+        self.entry["width"] = 30
+
+    def grid(self, column=0, row=0):
+        self.entry.grid(column=column, row=row, sticky=W)
+
+    def get(self) -> str:
+        return self.entry.get()
 
 
 class ComboboxInDialogForAddTodo:
@@ -300,6 +318,9 @@ class ComboboxInDialogForAddTodo:
 
     def grid(self, column=0, row=0):
         self.combobox.grid(column=column, row=row, sticky=W)
+
+    def get(self):
+        return self.combobox.get()
 
 
 class DialogForAddTodo(CustomizeSimpleDialog):
@@ -334,26 +355,39 @@ class DialogForAddTodo(CustomizeSimpleDialog):
         None
         """
 
-        description_combobox_label: LabelInDialogForAddTodo = LabelInDialogForAddTodo(master, "カテゴリを選択", 0, 0)
-        category: ComboboxInDialogForAddTodo = ComboboxInDialogForAddTodo(
+        category_label: LabelInDialogForAddTodo = LabelInDialogForAddTodo(master, "カテゴリを選択")
+        self.category_combo: ComboboxInDialogForAddTodo = ComboboxInDialogForAddTodo(
             master, self.items_for_combobox, self.current_combobox_value
         )
-        category.grid(column=1, row=0)
+        category_label.grid(column=0, row=0)
+        self.category_combo.grid(column=1, row=0)
 
-        description_entry_label: LabelInDialogForAddTodo = LabelInDialogForAddTodo(master, "追加するTODO名を入力", 0, 1)
+        importance_label: LabelInDialogForAddTodo = LabelInDialogForAddTodo(master, "重要度")
+        self.importance_combo: ComboboxInDialogForAddTodo = ComboboxInDialogForAddTodo(master, {"A": "A", "B": "B"}, "B")
 
-        self.todo_name: Entry = Entry(master)
-        self.todo_name.grid(column=1, row=1, sticky=W)
-        self.todo_name["font"] = ("メイリオ", 11)
-        self.todo_name["width"] = 30
+        importance_label.grid(0, 1)
+        self.importance_combo.grid(1, 1)
 
-        todo_detail_label: LabelInDialogForAddTodo = LabelInDialogForAddTodo(master, "TODOの詳細内容を入力", 0, 2)
+        limit_label: LabelInDialogForAddTodo = LabelInDialogForAddTodo(master, "期限")
+        self.limit: EntryInDialogForAddTodo = EntryInDialogForAddTodo(master)
+
+        limit_label.grid(0, 2)
+        self.limit.grid(1, 2)
+
+        description_entry_label: LabelInDialogForAddTodo = LabelInDialogForAddTodo(master, "追加するTODO名を入力")
+        description_entry_label.grid(0, 3)
+
+        self.todo_name: EntryInDialogForAddTodo = EntryInDialogForAddTodo(master)
+        self.todo_name.grid(1, 3)
+
+        todo_detail_label: LabelInDialogForAddTodo = LabelInDialogForAddTodo(master, "TODOの詳細内容を入力")
+        todo_detail_label.grid(0, 4)
 
         self.todo_detail_text: Text = Text(master)
         self.todo_detail_text["width"] = 30
         self.todo_detail_text["height"] = 5
         self.todo_detail_text["font"] = ("メイリオ", 11)
-        self.todo_detail_text.grid(column=1, row=2, sticky=W)
+        self.todo_detail_text.grid(column=1, row=4, sticky=W)
 
         self.todo_name_check_message: Message = tk.Message(master)
         self.todo_name_check_message["aspect"] = 300
@@ -374,9 +408,12 @@ class DialogForAddTodo(CustomizeSimpleDialog):
         None
         """
         todo_file_name: str = "".join([config.rule_file["string_when_add_todo"]["head"],
+                                       f"[{self.importance_combo.get()}]",
+                                       f"[#{self.limit.get()}]",
                                        self.todo_name.get(),
                                        config.rule_file["string_when_add_todo"]["tail"]])
-        with open(os.path.join(self.items_for_combobox[self.category.get()], todo_file_name), "w", encoding="utf_8") \
+
+        with open(os.path.join(self.items_for_combobox[self.category_combo.get()], todo_file_name), "w", encoding="utf_8") \
                 as f:
             f.write(self.todo_detail_text.get(1.0, END))
 
@@ -392,18 +429,20 @@ class DialogForAddTodo(CustomizeSimpleDialog):
         -------
         None
         """
-        todo_path: str = self.items_for_combobox[self.category.get()]
+        todo_path: str = self.items_for_combobox[self.category_combo.get()]
         todo_name: str = self.todo_name.get()
         todo_file_name: str = "".join([config.rule_file["string_when_add_todo"]["head"],
-                                       todo_name,
+                                       f"[{self.importance_combo.get()}]",
+                                       f"[#{self.limit.get()}]",
+                                       self.todo_name.get(),
                                        config.rule_file["string_when_add_todo"]["tail"]])
 
-        is_validate, error_msg = validate_add_todo(todo_path, todo_name, todo_file_name)
+        is_validate, error_msg = validate_add_todo(todo_path, todo_name, todo_file_name, self.limit.get())
 
         if is_validate:
             return True
         else:
-            self.todo_name_check_message.grid(column=1, row=3)
+            self.todo_name_check_message.grid(column=1, row=5)
             self.todo_name_check_message["text"] = error_msg
             return False
 
