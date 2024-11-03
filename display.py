@@ -8,6 +8,7 @@ from gui_object import Frame, Listbox, TextForDisplayDetail, DialogForAddTodo, \
     DialogConfirmForCloseTodo, DialogForUpdateTodo, RightClickMenu
 import os
 import subprocess
+import re
 
 
 class TodoDisplay:
